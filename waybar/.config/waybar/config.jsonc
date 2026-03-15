@@ -1,0 +1,66 @@
+{
+	"height": 30,
+	"modules-left": ["hyprland/workspaces"],
+    "modules-center": ["hyprland/window"],
+	"modules-right": ["power-profiles-daemon", "network", "battery", "pulseaudio", "hyprland/language", "clock"],
+	"hyprland/window": {
+		"tooltip": false
+	},
+	"network": {
+        	"format-wifi": "{icon} ",
+      		"format-icons": [
+			"\udb82\udd2f", 
+			"\udb82\udd1f", 
+			"\udb82\udd22", 
+			"\udb82\udd25", 
+			"\udb82\udd28"
+		],
+       		"format-ethernet": "{ipaddr}/{cidr}",
+        	"tooltip-format": "{ifname} via {gwaddr}({signalStrength}%)",
+        	"format-linked": "{ifname} (No IP)",
+        	"format-disconnected": "\udb82\udd2d",
+		"tooltip-format-wifi": "{essid} ({signalStrength}%)",
+		"on-click": "kitty -e nmtui"
+    	},
+	"pulseaudio": {
+		"format": "{icon}",
+		"tooltip-format": "Vol:{volume}% Mic: {format_source}",
+		"format-muted": "",
+		"format-icons": {
+			"headphone": "\uf025",
+			"default": ["\uf026", "\uf027", "\uf028"]
+		}
+	},
+	"hyprland/language": {
+		"format": {},
+		"format-en": "en",
+		"format-ru": "ru"
+	},
+	"battery": {
+        	"states": {
+            		"warning": 30,
+            		"critical": 15
+        	},
+        	"format": "{icon}",
+        	"format-full": "{icon}",
+        	"format-charging": "",
+        	"format-plugged": "",
+       	 	"format-alt": "{icon} {time}",
+        	"format-icons": ["󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"],
+		"tooltip-format": "{timeTo}, {capacity}%"
+    	},
+    "power-profiles-daemon": {
+        "format": "{icon}",
+        "tooltip-format": "Power profile: {profile}\nDriver: {driver}",
+        "tooltip": true,
+        "format-icons": {
+        "default": "",
+        "performance": "",
+        "balanced": "",
+        "power-saver": ""
+        }
+    },
+	"clock": {
+		"tooltip-format": "<big>{:%A, %d}</big>\n<tt><small>{calendar}</small></tt>"
+	}
+}
