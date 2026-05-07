@@ -28,6 +28,7 @@
 		"format-muted": "",
 		"format-icons": {
 			"headphone": "\uf025",
+			"headset": "\udb80\udcb0",
 			"default": ["\uf026", "\uf027", "\uf028"]
 		}
 	},
