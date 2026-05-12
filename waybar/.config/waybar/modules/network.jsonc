@@ -1,0 +1,18 @@
+{
+    "network": {
+	"format-wifi": "{icon} ",
+	"format-icons": [
+	    "\udb82\udd2f", 
+	    "\udb82\udd1f", 
+	    "\udb82\udd22", 
+	    "\udb82\udd25", 
+	    "\udb82\udd28"
+	],
+	"format-ethernet": "{ipaddr}/{cidr}",
+	"tooltip-format": "{ifname} via {gwaddr}({signalStrength}%)",
+	"format-linked": "{ifname} (No IP)",
+	"format-disconnected": "\udb82\udd2d",
+	"tooltip-format-wifi": "{essid} ({signalStrength}%)",
+	"on-click": "kitty -e nmtui"
+    }
+}
