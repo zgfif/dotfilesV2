@@ -1,6 +1,6 @@
 {
-    "hyprland/window": {
-	"tooltip": false
-    }
-
+  "hyprland/window": {
+	  "tooltip": false
+  }
 }
+

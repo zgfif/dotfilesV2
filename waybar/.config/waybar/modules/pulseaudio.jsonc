@@ -1,5 +1,5 @@
 {
-    "pulseaudio": {
+  "pulseaudio": {
 		"format": "{icon}",
 		"tooltip-format": "Vol: {volume}% \nMic: {format_source}",
 		"format-muted": "",
@@ -13,5 +13,6 @@
 				"\uf028"
 			]
 		}
-    }
+  }
 }
+

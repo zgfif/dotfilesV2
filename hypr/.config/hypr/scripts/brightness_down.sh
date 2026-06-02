@@ -16,4 +16,3 @@ notify-send \
     -t 1500 \
     -i display-brightness-symbolic \
     "Brightness"
-

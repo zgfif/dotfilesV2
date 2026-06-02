@@ -9,7 +9,6 @@ status=$(wpctl get-volume @DEFAULT_AUDIO_SINK@)
 # assign "Volume 0.2 [MUTED]" to varibales:
 read -r var1 var2 var3 <<< $status
 
-
 if [[ $var3 = '[MUTED]' ]]; then
 
     # send notification with "muted" message
@@ -32,4 +31,3 @@ else
             -h int:value:$vol \
             'unmute'
 fi
-

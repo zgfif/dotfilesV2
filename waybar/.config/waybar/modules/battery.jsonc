@@ -1,16 +1,16 @@
 {
-    "battery": {
-	"states": {
+  "battery": {
+	  "states": {
 	    "warning": 30,
 	    "critical": 15
-	},
-	"format": "{icon}",
-	"format-full": "{icon}",
-	"format-charging": "",
-	"format-plugged": "",
-	"format-alt": "{icon} {time}",
-	"format-icons": ["󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"],
-	"tooltip-format": "{timeTo}, {capacity}%"
-    }
-
+	  },
+	  "format": "{icon}",
+	  "format-full": "{icon}",
+	  "format-charging": "",
+	  "format-plugged": "",
+	  "format-alt": "{icon} {time}",
+	  "format-icons": ["󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"],
+	  "tooltip-format": "{timeTo}, {capacity}%"
+  }
 }
+

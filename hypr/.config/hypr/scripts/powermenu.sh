@@ -18,4 +18,3 @@ elif [[ $option = 'Logout' ]]; then
 else
     exit 0
 fi
-

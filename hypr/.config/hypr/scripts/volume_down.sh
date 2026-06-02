@@ -1,4 +1,4 @@
-!#/usr/bin/bash
+#!/usr/bin/bash
 
 # decrease volume on 5%
 wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%-

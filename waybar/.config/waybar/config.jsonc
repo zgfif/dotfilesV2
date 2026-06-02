@@ -1,23 +1,24 @@
 {
-    "height": 30,
-    "include": [
- 	"./modules/hyprland_window.jsonc",
- 	"./modules/power_profiles_daemon.jsonc",
- 	"./modules/network.jsonc",
- 	"./modules/battery.jsonc",
- 	"./modules/pulseaudio.jsonc",
- 	"./modules/hyprland_language.jsonc",
- 	"./modules/clock.jsonc"
-    ], 
-    "modules-left": [
-	"hyprland/workspaces"
-    ], 
-    "modules-right": [
-	"power-profiles-daemon", 
-	"network", 
-	"battery", 
-	"pulseaudio", 
-	"hyprland/language", 
-	"clock"
-    ]
+  "height": 30,
+  "include": [
+    "./modules/hyprland_window.jsonc",
+    "./modules/power_profiles_daemon.jsonc",
+    "./modules/network.jsonc",
+    "./modules/battery.jsonc",
+    "./modules/pulseaudio.jsonc",
+    "./modules/hyprland_language.jsonc",
+    "./modules/clock.jsonc"
+  ], 
+  "modules-left": [
+    "hyprland/workspaces"
+  ], 
+  "modules-right": [
+    "power-profiles-daemon", 
+    "network", 
+    "battery", 
+    "pulseaudio", 
+    "hyprland/language", 
+    "clock"
+  ]
 }
+
