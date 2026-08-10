@@ -1,6 +1,7 @@
 {
   "height": 30,
   "include": [
+    "./modules/hyprland_workspaces.jsonc",
     "./modules/hyprland_window.jsonc",
     "./modules/power_profiles_daemon.jsonc",
     "./modules/network.jsonc",
@@ -21,4 +22,3 @@
     "clock"
   ]
 }
-

@@ -9,8 +9,9 @@
 	  "format-charging": "",
 	  "format-plugged": "",
 	  "format-alt": "{icon} {time}",
-	  "format-icons": ["󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"],
+	  "format-icons": [
+		"󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"
+	  ],
 	  "tooltip-format": "{timeTo}, {capacity}%"
   }
 }
-

@@ -2,6 +2,9 @@
 ---- LOOK AND FEEL ----
 -----------------------
 
+local colors = require("colors")
+
+
 -- Refer to https://wiki.hypr.land/Configuring/Basics/Variables/
 hl.config({
     general = {
@@ -11,7 +14,7 @@ hl.config({
         border_size = 1,
 
         col = {
-            active_border   = { colors = {"rgba(33ccffee)", "rgba(00ff99ee)"}, angle = 45 },
+            active_border   = { colors = {colors.background, colors.primary}, angle = 45 },
             inactive_border = "rgba(595959aa)",
         },
 
@@ -41,8 +44,8 @@ hl.config({
 
         blur = {
             enabled   = true,
-            size      = 3,
-            passes    = 1,
+            size      = 7,
+            passes    = 4,
             vibrancy  = 0.1696,
         },
     },
