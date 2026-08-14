@@ -1,8 +1,12 @@
 import QtQuick
 import Quickshell.Services.UPower 
+import Quickshell
 
 
-Rectangle {  
+
+Rectangle {
+  id: powerMode
+  
   height: 30
   width: 30
 
@@ -18,16 +22,22 @@ Rectangle {
     onTriggered: {
       const profile = PowerProfiles.profile
 
-      let text = ""
-
-      if (profile == 0) {
-        text = "󰌪"
-      } else if (profile == 1) {
-        text = ""
+      let icon = ""
+      let desc = ""
+  
+      if (profile == 1) {
+        icon = ""
+        desc = "Balanced"
+      } else if (profile == 2) {
+        icon = "󱐌"
+        desc = "Performance"
       } else {
-        text = "󱐌"
+        icon = "󰌪"
+        desc = "Save"
       }
-      profileText.text = text
+
+      profileText.text = icon
+      popupText.text = desc
     }
   }
 
@@ -38,5 +48,40 @@ Rectangle {
     anchors.centerIn: parent
 
     color: "white"
+  }
+
+  HoverHandler {
+    id: hover
+  }
+
+  PopupWindow {
+    visible: hover.hovered ? true : false
+    implicitHeight: 50
+    implicitWidth: 80
+
+    color: "transparent"
+
+    anchor.item: powerMode
+
+    anchor.rect.x: -(powerMode.width / 2) - 10
+    anchor.rect.y: powerMode.height + 10
+
+    Rectangle {
+      anchors.fill: parent
+
+      color: "black"
+      
+      radius: 10
+
+      Text {
+        id: popupText
+        
+        text: "PF"
+        
+        color: "white"
+        
+        anchors.centerIn: parent
+      }
+    }
   }
 }

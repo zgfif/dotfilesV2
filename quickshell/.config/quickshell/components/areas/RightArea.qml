@@ -1,52 +1,49 @@
 import QtQuick
-import Quickshell.Io
-
 import "../modules"
-
-
+import "../../app"
 
 Rectangle {
-  height: 30
-  width: 200
+    implicitHeight: 30
+    implicitWidth: 200
 
-  anchors {
-    right: parent.right
-    rightMargin: 8
-  }
+    anchors {
+        right: parent.right
+        rightMargin: 8
+    }
 
-  color: "transparent"
+    color: AppState.defaultBackgroundColor
 
-  DateTime {
-    id: dateTime
+    DateTime {
+        id: dateTime
 
-    anchors.right: parent.right
-  }
+        anchors.right: parent.right
+    }
 
-  Keyboard {
-    id: keyboard
+    Keyboard {
+        id: keyboard
 
-    anchors.right: dateTime.left
-  }
+        anchors.right: dateTime.left
+    }
 
-  Volume {
-    id: volume
+    Volume {
+        id: volume
 
-    anchors.right: keyboard.left
-  }
+        anchors.right: keyboard.left
+    }
 
-  Battery {
-    id: battery
+    Battery {
+        id: battery
 
-    anchors.right: volume.left
-  }
+        anchors.right: volume.left
+    }
 
-  Network {
-    id: network
+    Network {
+        id: network
 
-    anchors.right: battery.left
-  }
+        anchors.right: battery.left
+    }
 
-  PowerMode {
-    anchors.right: network.left
-  }
+    PowerMode {
+        anchors.right: network.left
+    }
 }

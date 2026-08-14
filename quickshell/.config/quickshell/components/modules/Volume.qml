@@ -1,9 +1,12 @@
 import QtQuick
 import Quickshell.Io
+import Quickshell
 
 
 
 Rectangle {
+  id: volume
+
   height: 30
   width: 30
 
@@ -18,21 +21,37 @@ Rectangle {
 
     stdout: StdioCollector {
       onStreamFinished: {
+        const elems = ["", "", "", ""]
+        
+        let status = ""
+
+        let icon = elems[0]
+        
         let array = this.text.split(" ")
 
-        let volume = parseFloat(array[array.length - 1])
+        let volumeElement = array[array.length - 1].replace("\n", "")
+
+        if (volumeElement == "[MUTED]") { 
+          volumeElement = array[array.length - 2]
+          status = "\n[MUTED]"
+        }
+
+        icon = elems[0]
         
-        let elems = ["", "", "", ""]
+        let volume = Number(parseFloat(volumeElement).toFixed(2))
 
         if (volume >= 0.66) {
-          volumeText.text = elems[3]
+          icon = elems[3]
         } else if (volume >= 0.33) {
-          volumeText.text = elems[2]
+          icon = elems[2]
         } else if (volume > 0) {
-          volumeText.text = elems[1]
+          icon = elems[1]
         } else {
-          volumeText.text = elems[0]
+          icon = elems[0]
         }
+
+        volumeText.text = icon
+        popupText.text = "Vol: " + volume * 100 + "%" + status
       }
     }
 
@@ -58,5 +77,36 @@ Rectangle {
     anchors.centerIn: parent
 
     color: "white"
+  }
+
+  HoverHandler {
+    id: hover
+  }
+
+  PopupWindow {
+    visible: hover.hovered ? true : false
+    anchor.item: volume
+
+    implicitHeight: 46
+    implicitWidth: 80
+
+    anchor.rect.x: -(volume.width / 2) - 10
+    anchor.rect.y: volume.height + 10
+
+    color: "transparent"
+
+    Rectangle {
+      anchors.fill: parent
+      radius: 10
+
+      color: "black"
+
+      Text {
+        id: popupText
+        text: "Vol: 20%"
+        anchors.centerIn: parent
+        color: "white"
+      }
+    }
   }
 }

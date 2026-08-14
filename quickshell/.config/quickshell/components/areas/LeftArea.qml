@@ -1,19 +1,20 @@
 import QtQuick
-
 import "../modules"
+import "../../app"
 
 Rectangle {
-  height: 30
-  width: 200
+  implicitHeight: parent.height
+  implicitWidth: 200
 
   anchors {
     left: parent.left
     leftMargin: 8
   }
 
-  color: "transparent"
+  color: AppState.defaultBackgroundColor
   
   Workspace {
+    height: parent.height
     anchors.left: parent.left
   }
 }

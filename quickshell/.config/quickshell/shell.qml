@@ -1,25 +1,22 @@
 import Quickshell
-
 import "./components/areas"
-
-
+import "./app"
 
 PanelWindow {
-  anchors {
-    top: true
-    left: true
-    right: true
-  }
+    anchors {
+        top: true
+        left: true
+        right: true
+    }
 
-  color: "transparent"
-
-  implicitHeight: 30
+    implicitHeight: 30
+    color: AppState.defaultBackgroundColor
   
-  LeftArea {
-    anchors.left: parent.left
-  }
+    LeftArea {
+        anchors.left: parent.left
+    }
 
-  RightArea {
-    anchors.right: parent.right
-  }
+    RightArea {
+        anchors.right: parent.right
+    }
 }

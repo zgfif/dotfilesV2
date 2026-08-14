@@ -1,53 +1,53 @@
 import QtQuick
 import Quickshell.Hyprland
-
-
+import "../../app"
 
 Row {
-  spacing: 0
+    spacing: 0
 
-  Repeater {
-    model: Hyprland.workspaces
+    Repeater {
+        model: Hyprland.workspaces
   
-    Rectangle { 
-      height: 30  
-      width: 24
+        // each rectangle corresponds one existing workspace:
+        Rectangle { 
+            width: 24
+            height: 30  
 
-      color: "transparent"
+            color: AppState.defaultBackgroundColor
 
+            // this inner rectangle visible when pointer is over parent rectangle:
+            Rectangle {
+                height: 2
+                width: parent.width
+
+                color: modelData.active || mouseArea.containsMouse 
+                    ? AppState.defaultTextColor 
+                    : AppState.defaultBackgroundColor
+
+                anchors.bottom: parent.bottom
+            }
       
-      Rectangle {
-        height: 2
-        width: parent.width
+            MouseArea {
+                id: mouseArea
+                anchors.fill: parent
+                hoverEnabled: true
+                
+                onClicked: modelData.activate()
+            }
 
-        color: modelData.active || mouseArea.containsMouse ? "white" : "transparent"
+            // text for each workspace:
+            Text {
+                text: modelData.id
+                
+                anchors.centerIn: parent
 
-        anchors {
-          bottom: parent.bottom
+                color: AppState.defaultTextColor
+
+                font {
+                    pixelSize: 12
+                    bold: true
+                }
+            }
         }
-      }
-      
-
-      MouseArea {
-        id: mouseArea
-
-        anchors.fill: parent
-        hoverEnabled: true
-        
-        onClicked: {
-          modelData.activate()
-        }
-      }
-
-      Text {
-        text: modelData.id
-        anchors.centerIn: parent
-
-        color: "white"
-
-        font.pixelSize: 12
-        font.bold: true
-      }
     }
-  }
 }
