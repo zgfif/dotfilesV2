@@ -18,4 +18,8 @@ QtObject {
     // Font parameters:
     property int defaultFontSize: 12
     property bool defaultFontBold: true
+    property string defaultFontFamily: "Arial"
+
+    // hardware parameters:
+    property string defaultBatteryName: "BAT1"
 }

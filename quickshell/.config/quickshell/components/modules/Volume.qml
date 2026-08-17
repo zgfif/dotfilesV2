@@ -1,112 +1,113 @@
 import QtQuick
-import Quickshell.Io
 import Quickshell
-
-
+import Quickshell.Io
+import "../../app"
 
 Rectangle {
-  id: volume
+    id: volume
 
-  height: 30
-  width: 30
-
-  color: "transparent"
-
-  Process {
-    id: volumeGetter
-
-    command: ["wpctl", "get-volume", "@DEFAULT_AUDIO_SINK@"]
+    property var volumeIcons: ["", "", "", ""]
     
-    running: true
+    width: 30
+    height: 30
 
-    stdout: StdioCollector {
-      onStreamFinished: {
-        const elems = ["", "", "", ""]
+    color: AppState.defaultBackgroundColor
+
+    function chooseIcon(level) {
+        if (level >= 0.66)
+            return volumeIcons[3]
         
-        let status = ""
-
-        let icon = elems[0]
+        if (level >= 0.33)
+            return volumeIcons[2]
         
-        let array = this.text.split(" ")
+        if (level > 0)
+            return volumeIcons[1]
 
-        let volumeElement = array[array.length - 1].replace("\n", "")
-
-        if (volumeElement == "[MUTED]") { 
-          volumeElement = array[array.length - 2]
-          status = "\n[MUTED]"
-        }
-
-        icon = elems[0]
-        
-        let volume = Number(parseFloat(volumeElement).toFixed(2))
-
-        if (volume >= 0.66) {
-          icon = elems[3]
-        } else if (volume >= 0.33) {
-          icon = elems[2]
-        } else if (volume > 0) {
-          icon = elems[1]
-        } else {
-          icon = elems[0]
-        }
-
-        volumeText.text = icon
-        popupText.text = "Vol: " + volume * 100 + "%" + status
-      }
+        return volumeIcons[0]
     }
 
-  }
-
-  Timer {
-    interval: 1000
-
-    running: true
-
-    repeat: true
-
-    onTriggered: {
-      volumeGetter.running = true
+    function isMuted(message) {
+        return /\[MUTED\]/.test(message)
     }
-  }
 
-  Text {
-    id: volumeText
+    function volumeLevel(message) {
+        const reg = /(\d+\.\d+)/
+        const result = message.match(reg)
 
-    text: ""
+        return result !== null ? parseFloat(result[0]) : NaN
+    }
 
-    anchors.centerIn: parent
+    // process to retrieve volume level.
+    Process {
+        id: volumeGetter
 
-    color: "white"
-  }
+        command: ["wpctl", "get-volume", "@DEFAULT_AUDIO_SINK@"]
+        
+        running: true
 
-  HoverHandler {
-    id: hover
-  }
+        stdout: StdioCollector {
+            onStreamFinished: {                
+                const mutedStatus = isMuted(this.text) ? "\n[MUTED]" : ""
+                const vol = volumeLevel(this.text)
 
-  PopupWindow {
-    visible: hover.hovered ? true : false
-    anchor.item: volume
+                if (Number.isNaN(vol))
+                    return
+                
+                volumeText.text = chooseIcon(vol)
+                popupText.text = `Vol: ${(vol * 100).toFixed()}%${mutedStatus}`
 
-    implicitHeight: 46
-    implicitWidth: 80
+            }
+        }
 
-    anchor.rect.x: -(volume.width / 2) - 10
-    anchor.rect.y: volume.height + 10
+    }
 
-    color: "transparent"
+    // each 1000 ms run process to retrieve volume level
+    Timer {
+        interval: 1000
+        running: true
+        repeat: true
+        
+        onTriggered: volumeGetter.running = true
+    }
 
-    Rectangle {
-      anchors.fill: parent
-      radius: 10
-
-      color: "black"
-
-      Text {
-        id: popupText
-        text: "Vol: 20%"
+    // indicator text
+    Text {
+        id: volumeText
         anchors.centerIn: parent
-        color: "white"
-      }
+        color: AppState.defaultTextColor
     }
-  }
+
+    HoverHandler {
+       id: hover
+    }
+
+    // shows additional info when hover on volume item
+    PopupWindow {
+        visible: hover.hovered
+        
+        anchor.item: volume
+
+        implicitWidth: 80
+        implicitHeight: 46
+
+        anchor.rect {
+            x: -(volume.width / 2) - 10
+            y: volume.height + 10
+        }
+        
+        color: AppState.defaultBackgroundColor
+
+        Rectangle {
+            anchors.fill: parent
+            radius: AppState.defaultPopupRadius
+            color: AppState.defaultPopupBackground
+            
+            // popup window text.
+            Text {
+                id: popupText
+                anchors.centerIn: parent
+                color: AppState.defaultTextColor
+            }
+        }
+    }
 }

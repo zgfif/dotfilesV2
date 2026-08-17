@@ -1,117 +1,114 @@
 import QtQuick
-import Quickshell.Io
 import Quickshell
-
-
+import Quickshell.Io
+import "../../app"
 
 Rectangle {
-  height: 30
-  width: 30
+    id: battery
 
-  id: battery
-  color: "transparent"
-  
-  Process {
-    id: batteryProcess
+    property var batteryIcons: ["󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"]
 
-    command: ["cat", "/sys/class/power_supply/BAT1/capacity"]
+    width: 30
+    height: 30
+
+    color: AppState.defaultBackgroundColor
+
+    function chooseIcon(percentage) {
+        if (percentage <= 10)
+            return batteryIcons[0]
+
+        if (percentage <= 20)
+            return batteryIcons[1]
+        
+        if (percentage <= 30)
+            return batteryIcons[2]
+
+        if (percentage <= 40)
+            return batteryIcons[3]
+
+        if (percentage <= 50)
+            return batteryIcons[4]
+
+        if (percentage <= 60)
+            return batteryIcons[5]
+        
+        if (percentage <= 70)
+            return batteryIcons[6]
+        
+        if (percentage <= 80)
+            return batteryIcons[7]
+        
+        if (percentage <= 90)
+            return batteryIcons[8]
+        
+        return batteryIcons[9]
+    }
     
-    running: true
+    // process to retrieve battery capacity.
+    Process {
+        id: batteryProcess
+        command: ["cat", `/sys/class/power_supply/${AppState.defaultBatteryName}/capacity`]
+        running: true
 
-    stdout: StdioCollector {
-      onStreamFinished: {
-        let percentage = this.text
-        
-        popupText.text = percentage
+        stdout: StdioCollector {
+            onStreamFinished: {                
+                const percentage = Number(this.text)
+                
+                if (Number.isNaN(percentage))
+                    return
+                
+                batteryText.text = chooseIcon(percentage)
+                popupText.text = `bat: ${percentage}%`
+            }
+        }
+    }
 
-        let n = parseInt(percentage, 10)
-        
-        let text = "";
+    // Retrieve battery capacity by interval.
+    Timer {
+        interval: 10_000 // ms
+        running: true
+        repeat: true
 
-        if (n <=10) {
-          batterText.color = "red"
-          text = "󰁺"
-        } else if (n <= 20) {
-          text = "󰁻"
-        } else if (n <= 30) {
-          text = "󰁼"
-        } else if (n <= 40) {
-          text = "󰁽"
-        } else if (n <= 50) {
-          text = "󰁾"
-        } else if (n <= 60) {
-          text = "󰁿"
-        } else if (n <= 70) {
-          text = "󰂀"
-        } else if (n <= 80) {
-          text = "󰂁"
-        } else if (n <= 90) {
-          text = "󰂂"
-        } else {
-          text = "󰁹"
+        onTriggered: { 
+            batteryProcess.running = true
+        }
+    }
+
+    Text {
+        id: batteryText        
+        anchors.centerIn: parent
+        color: AppState.defaultTextColor
+    }
+
+    HoverHandler {
+        id: hover
+    }
+
+    // show additional information about battery.
+    PopupWindow {
+        implicitWidth: 80
+        implicitHeight: 40
+
+        visible: hover.hovered
+
+        anchor.item: battery
+        color: AppState.defaultBackgroundColor
+
+        anchor.rect {
+            x: -(battery.width / 2) - 10
+            y: battery.height + 10
         }
 
-        batterText.text = text
-        popupText.text = "bat: "+ n + "%"
-      }
+        Rectangle {
+            anchors.fill: parent
+            color: AppState.defaultPopupBackground
+            radius: AppState.defaultPopupRadius
+
+            Text {
+                id: popupText
+                anchors.centerIn: parent
+                color: AppState.defaultTextColor
+            }
+        }
     }
-  }
-
-
-  Timer {
-    interval: 1000
-
-    running: true
-
-    repeat: true
-
-    onTriggered: { 
-      batteryProcess.running = true
-    }
-  }
-
-  Text {
-    id: batterText
-
-    text: "󰁹"
-    
-    anchors.centerIn: parent
-
-    color: "white"
-  }
-
-  HoverHandler {
-    id: hover
-  }
-
-  PopupWindow {
-    implicitHeight: 40
-    implicitWidth: 80
-
-    anchor.item: battery
-
-    visible: hover.hovered ? true: false
-
-    color: "transparent"
-
-    anchor.rect.x: -(battery.width / 2) - 10
-    anchor.rect.y: battery.height + 10
-
-    Rectangle {
-      color: "black"
-
-      anchors.fill: parent
-
-      radius: 10
-
-      Text {
-        id: popupText
-        text: "60%"
-        
-        anchors.centerIn: parent
-        
-        color: "white"
-      }
-    }
-  }
 }
