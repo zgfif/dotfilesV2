@@ -1,87 +1,84 @@
 import QtQuick
 import Quickshell.Services.UPower 
 import Quickshell
-
-
+import "../../app"
 
 Rectangle {
-  id: powerMode
-  
-  height: 30
-  width: 30
+    id: powerMode
 
-  color: "transparent"
+    property var powerIcons: ["󰌪", "", "󱐌"]
+    
+    width: 30
+    height: 30
 
-  Timer {
-    interval: 1000
+    color: AppState.defaultBackgroundColor
+    
+    function updatePowerIndicator() {
+        let icon = powerIcons[0]
+        let profileName = "Save"
 
-    running: true
+        switch (PowerProfiles.profile) {
+            case PowerProfiles.Balanced:
+                icon = powerIcons[1]
+                profileName = "Balanced"
+                break
 
-    repeat: true
-
-    onTriggered: {
-      const profile = PowerProfiles.profile
-
-      let icon = ""
-      let desc = ""
-  
-      if (profile == 1) {
-        icon = ""
-        desc = "Balanced"
-      } else if (profile == 2) {
-        icon = "󱐌"
-        desc = "Performance"
-      } else {
-        icon = "󰌪"
-        desc = "Save"
-      }
-
-      profileText.text = icon
-      popupText.text = desc
+            case PowerProfiles.Performance:
+                icon = powerIcons[2]
+                profileName = "Performance"
+                break
+        } 
+    
+        profileText.text = icon
+        popupText.text = profileName
     }
-  }
 
-  Text {
-    id: profileText
-  
-    text: ""
-    anchors.centerIn: parent
+    Component.onCompleted: updatePowerIndicator()
 
-    color: "white"
-  }
+    // update indicator every 1 second
+    Timer {
+        interval: 1_000
+        running: true
+        repeat: true
 
-  HoverHandler {
-    id: hover
-  }
+        onTriggered: updatePowerIndicator()
+    }
 
-  PopupWindow {
-    visible: hover.hovered ? true : false
-    implicitHeight: 50
-    implicitWidth: 80
-
-    color: "transparent"
-
-    anchor.item: powerMode
-
-    anchor.rect.x: -(powerMode.width / 2) - 10
-    anchor.rect.y: powerMode.height + 10
-
-    Rectangle {
-      anchors.fill: parent
-
-      color: "black"
-      
-      radius: 10
-
-      Text {
-        id: popupText
-        
-        text: "PF"
-        
-        color: "white"
-        
+    Text {
+        id: profileText  
         anchors.centerIn: parent
-      }
+        color: AppState.defaultTextColor
     }
-  }
+
+    HoverHandler {
+        id: hover
+    }
+
+    PopupWindow {
+        implicitWidth: 80
+        implicitHeight: 50
+
+        visible: hover.hovered
+
+        color: AppState.defaultBackgroundColor
+
+        anchor.item: powerMode
+
+        anchor.rect {
+            x: -(powerMode.width / 2) - 10
+            y: powerMode.height + 10
+        }
+
+        Rectangle {
+            anchors.fill: parent
+            color: AppState.defaultPopupBackground
+            radius: AppState.defaultPopupRadius
+
+            Text {
+                id: popupText
+                color: AppState.defaultTextColor
+                anchors.centerIn: parent
+            }
+        }
+    }
 }
