@@ -42,7 +42,6 @@ Rectangle {
         stdout: StdioCollector {
             onStreamFinished: {
                 const signature = this.text.trim()
-                
                 if (signature === "") {
                     return
                 }
@@ -64,10 +63,11 @@ Rectangle {
         connected: false
             
         parser: SplitParser {
+            
+
             onRead: message => {
                 if (!message.startsWith("activelayout>>"))
                     return
-                
                 const layout = message.split(">>")[1]
                 keyboardText.text = getShortForm(message)
             }
