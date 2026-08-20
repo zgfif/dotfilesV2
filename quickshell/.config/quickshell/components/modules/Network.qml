@@ -67,6 +67,11 @@ Rectangle {
         onTriggered: updateNetworkIndicator()
     }
 
+    MouseArea {
+        anchors.fill: parent
+        onClicked: Quickshell.execDetached({command: ["sh", "-c", "kitty -e 'nmtui'"]})
+    }
+
     HoverHandler {
         id: hover
     }
