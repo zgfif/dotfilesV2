@@ -1,5 +1,8 @@
+// DateTime.qml
 import QtQuick
+
 import Quickshell
+
 import "../../app"
 
 Rectangle {
@@ -22,9 +25,8 @@ Rectangle {
     Text {
         anchors.centerIn: parent
 
-        text: Qt.formatDateTime(clock.date, AppState.timeFormat)
-
         color: AppState.defaultTextColor
+        text: Qt.formatDateTime(clock.date, AppState.timeFormat)
 
         font {
             pixelSize:AppState.defaultFontSize
@@ -37,7 +39,6 @@ Rectangle {
         implicitHeight: 60
         
         visible: hover.hovered
-        
         anchor.item: dateTime
         
         anchor.rect {
@@ -45,21 +46,18 @@ Rectangle {
             y: dateTime.height + 10
         }
         
-        color: AppState.defaultBackgroundColor
+        color: "transparent"
         
         Rectangle {
             anchors.fill: parent
             
             color: AppState.defaultPopupBackground
-            
             radius: AppState.defaultPopupRadius
 
              Text {
-                text: Qt.formatDateTime(clock.date, AppState.dateFormat)
-
                 anchors.centerIn: parent
-                
-                color: AppState.defaultTextColor
+                color: AppState.defaultTextColor                
+                text: Qt.formatDateTime(clock.date, AppState.dateFormat)
             }
         }
     }

@@ -1,83 +1,30 @@
+// Battery.qml
 import QtQuick
+
 import Quickshell
-import Quickshell.Io
+import Quickshell.Services.UPower
+
 import "../../app"
+import "../../utils/battery.js" as BatteryUtils
 
 Rectangle {
     id: battery
-
-    property var batteryIcons: ["󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"]
 
     width: 30
     height: 30
 
     color: AppState.defaultBackgroundColor
 
-    function chooseIcon(percentage) {
-        if (percentage <= 10)
-            return batteryIcons[0]
-
-        if (percentage <= 20)
-            return batteryIcons[1]
-        
-        if (percentage <= 30)
-            return batteryIcons[2]
-
-        if (percentage <= 40)
-            return batteryIcons[3]
-
-        if (percentage <= 50)
-            return batteryIcons[4]
-
-        if (percentage <= 60)
-            return batteryIcons[5]
-        
-        if (percentage <= 70)
-            return batteryIcons[6]
-        
-        if (percentage <= 80)
-            return batteryIcons[7]
-        
-        if (percentage <= 90)
-            return batteryIcons[8]
-        
-        return batteryIcons[9]
-    }
-    
-    // process to retrieve battery capacity.
-    Process {
-        id: batteryProcess
-        command: ["cat", `/sys/class/power_supply/${AppState.defaultBatteryName}/capacity`]
-        running: true
-
-        stdout: StdioCollector {
-            onStreamFinished: {                
-                const percentage = Number(this.text)
-                
-                if (Number.isNaN(percentage))
-                    return
-                
-                batteryText.text = chooseIcon(percentage)
-                popupText.text = `bat: ${percentage}%`
-            }
-        }
-    }
-
-    // Retrieve battery capacity by interval.
-    Timer {
-        interval: 10_000 // ms
-        running: true
-        repeat: true
-
-        onTriggered: { 
-            batteryProcess.running = true
-        }
-    }
+    readonly property UPowerDevice device: 
+        UPower.devices.values.find(
+            device => device.model.startsWith("A")
+        )
 
     Text {
-        id: batteryText        
         anchors.centerIn: parent
+
         color: AppState.defaultTextColor
+        text: BatteryUtils.chooseIcon(battery.device)
     }
 
     HoverHandler {
@@ -90,12 +37,12 @@ Rectangle {
         implicitHeight: 40
 
         visible: hover.hovered
-
         anchor.item: battery
-        color: AppState.defaultBackgroundColor
+
+        color: "transparent"
 
         anchor.rect {
-            x: -(battery.width / 2) - 10
+            x: (battery.width - implicitWidth) / 2
             y: battery.height + 10
         }
 
@@ -105,9 +52,10 @@ Rectangle {
             radius: AppState.defaultPopupRadius
 
             Text {
-                id: popupText
                 anchors.centerIn: parent
+
                 color: AppState.defaultTextColor
+                text: BatteryUtils.description(battery.device)
             }
         }
     }

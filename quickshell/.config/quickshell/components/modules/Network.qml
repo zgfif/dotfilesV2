@@ -1,6 +1,9 @@
+// Network.qml
 import QtQuick
+
 import Quickshell.Networking
 import Quickshell
+
 import "../../app"
 import "../../utils/network.js" as NetworkUtils
 
@@ -38,7 +41,7 @@ Rectangle {
         anchor.item: network
         visible: hover.hovered
 
-        color: AppState.defaultBackgroundColor
+        color: "transparent"
 
         implicitWidth: 140
         implicitHeight: 46

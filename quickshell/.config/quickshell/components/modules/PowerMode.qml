@@ -1,6 +1,9 @@
+// PowerMode.qml
 import QtQuick
-import Quickshell.Services.UPower 
+
 import Quickshell
+import Quickshell.Services.UPower 
+
 import "../../app"
 
 Rectangle {
@@ -60,7 +63,7 @@ Rectangle {
 
         visible: hover.hovered
 
-        color: AppState.defaultBackgroundColor
+        color: "transparent"
 
         anchor.item: powerMode
 

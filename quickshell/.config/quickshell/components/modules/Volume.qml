@@ -1,87 +1,68 @@
+// Volume.qml
 import QtQuick
+
 import Quickshell
-import Quickshell.Io
+
 import Quickshell.Services.Pipewire
+
 import "../../app"
+import "../../utils/volume.js" as VolumeUtils
 
 Rectangle {
     id: volume
-
-    readonly property var volumeIcons: ["", "", "", ""]
     
     readonly property PwNode audioSink: Pipewire.defaultAudioSink
+    readonly property real level: VolumeUtils.getVolume(audioSink)
+    readonly property bool muted: VolumeUtils.isMuted(audioSink)
+    
+    width: 30
+    height: 30
+
+    color: AppState.defaultBackgroundColor
     
     PwObjectTracker {
 	    objects: [volume.audioSink]
 	}
 
-    width: 30
-    height: 30
-
-    color: AppState.defaultBackgroundColor
-
-    function chooseIcon(level) {
-        if (level >= 0.66)
-            return volumeIcons[3]
-        
-        if (level >= 0.33)
-            return volumeIcons[2]
-        
-        if (level > 0)
-            return volumeIcons[1]
-
-        return volumeIcons[0]
-    }
-
-    function getVolume() {
-       return audioSink.audio.volume ?? 0
-    }
-
-    function mutedStatus() {
-        return audioSink.audio.muted ? "\n[muted]" : ""
-    }
-
-    // indicator text
+    // Volume indicator.
     Text {
         anchors.centerIn: parent
 
         color: AppState.defaultTextColor
-        
-        text: chooseIcon(getVolume())
+        text: VolumeUtils.indicator(level, muted)
     }
 
     HoverHandler {
         id: hover
     }
 
-    // shows additional info when hover on volume item
+    // Show additional information on hover.
     PopupWindow {
-        visible: hover.hovered
-        
         anchor.item: volume
+        
+        visible: hover.hovered
 
         implicitWidth: 80
         implicitHeight: 46
 
         anchor.rect {
-            x: -(volume.width / 2) - 10
+            x: (volume.width - implicitWidth) / 2
             y: volume.height + 10
         }
         
-        color: AppState.defaultBackgroundColor
+        color: "transparent"
 
         Rectangle {
             anchors.fill: parent
-            radius: AppState.defaultPopupRadius
+
             color: AppState.defaultPopupBackground
+            radius: AppState.defaultPopupRadius
             
-            // popup window text.
             Text {
                 anchors.centerIn: parent
 
                 color: AppState.defaultTextColor
-                
-                text: `${(getVolume() * 100).toFixed()}%${mutedStatus()}`
+                text: VolumeUtils.tooltip(level, muted)
             }
         }
     }

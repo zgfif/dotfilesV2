@@ -1,5 +1,8 @@
+// Workspace.qml
 import QtQuick
+
 import Quickshell.Hyprland
+
 import "../../app"
 
 Row {

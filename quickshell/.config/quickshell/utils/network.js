@@ -1,5 +1,5 @@
 const WIFIICONS = ["󰤯", "󰤟", "󰤢", "󰤥", "󰤨"]
-
+const DISCONNECTED_ICON = "󰤫"
 
 
 // choose Network indicator icon
@@ -8,10 +8,15 @@ function chooseIcon(wifiAdapter) {
         return "?"
 
     const network = connectedNetwork(wifiAdapter)
+    
+    if (!network)
+        return DISCONNECTED_ICON
+
     const strength = signalStrength(network)
 
     if (strength > 0.9)
         return WIFIICONS[4]
+
     if (strength > 0.75)
         return WIFIICONS[3]
 
@@ -32,8 +37,11 @@ function connectedNetwork(wifiAdapter) {
         if (!network.connected) {
             continue
         }
+
         return network
-    }   
+    }
+
+    return null
 }
 
 
@@ -41,23 +49,24 @@ function connectedNetwork(wifiAdapter) {
 // description for tooltip on network indicator
 function description(wifiAdapter) {
     if (!wifiAdapter)
-        return "?"
+        return "No WiFi adapter"
 
     const network = connectedNetwork(wifiAdapter)
-    const name = networkName(network)
+
+    if (!network)
+        return "Disconnected"
+
     const strength = signalStrength(network)
 
-    return `${name}\n${(strength * 100).toFixed()}%`
+    return `${network.name}\n${(strength * 100).toFixed()}%`
 }
 
-
-// return AP name
-function networkName(network) {
-    return network.name
-}
 
 
 // return AP signal strength
 function signalStrength(network) {
-    return parseFloat(network.signalStrength)
+    if (!network)
+        return 0
+    
+    return network.signalStrength
 }

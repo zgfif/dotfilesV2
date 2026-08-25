@@ -1,85 +1,75 @@
+// Keyboard.qml
 import QtQuick
+
+import Quickshell
 import Quickshell.Io
+
 import "../../app"
+import "../../utils/keyboard.js" as KeyboardUtils
 
 Rectangle {
     id: keyboard
+
+    property string layout: "?"
 
     width: 30
     height: 30
 
     color: AppState.defaultBackgroundColor
 
-    // process to retrieve current keyboard layout.
+    // Retrieve the current keyboard layout on startup.
     Process {
         running: true
       
-        command: ["sh", "-c", "hyprctl devices -j | jq -r '.keyboards[8].active_keymap'"]
+        command: KeyboardUtils.getKeyboardsCommand()
 
         stdout: StdioCollector {
+            id: keyboardsState
+
             onStreamFinished: {
-                keyboardText.text = getShortForm(this.text)
+                const longLayout = 
+                    KeyboardUtils.longLayoutFromKeyboards(keyboardsState.text)
+                
+                keyboard.layout = 
+                    KeyboardUtils.convertToShortLayout(longLayout)
             }
         }
     }
 
-    function getShortForm(longForm) {      
-        if (/English/.test(longForm)) {
-            return "en"
-        } else if (/Russian/.test(longForm)) {
-            return "ru"
-        }
+    // Listen for Hyprland layout changes.
+    Socket {        
+        property string xdgRuntimeDir: 
+            Quickshell.env("XDG_RUNTIME_DIR")
 
-        return ""
-    }
+        property string instanceSignature: 
+            Quickshell.env("HYPRLAND_INSTANCE_SIGNATURE")
 
-    // process to retrieve the Hyprland instance signature.
-    Process {    
-        running: true
+        connected: xdgRuntimeDir !== "" && instanceSignature !== ""
 
-        command: ["sh", "-c", "echo $HYPRLAND_INSTANCE_SIGNATURE"]
+        path: KeyboardUtils.pathToSocket(
+            xdgRuntimeDir, 
+            instanceSignature
+        )
 
-        stdout: StdioCollector {
-            onStreamFinished: {
-                const signature = this.text.trim()
-                if (signature === "") {
-                    return
-                }
-
-                kbSocket.instanceSignature = signature
-                kbSocket.connected = true
-            }
-        }
-    }
-
-    // Socket which listens for Hyprland events.
-    Socket {
-        id: kbSocket
-        
-        property string instanceSignature: ""
-
-        path: "/run/user/1000/hypr/" + kbSocket.instanceSignature + "/.socket2.sock"
-        
-        connected: false
-            
         parser: SplitParser {
-            
-
             onRead: message => {
-                if (!message.startsWith("activelayout>>"))
+                if (!KeyboardUtils.containsLayout(message))
                     return
-                const layout = message.split(">>")[1]
-                keyboardText.text = getShortForm(message)
+                
+                const longLayout = KeyboardUtils.longLayoutFromEvent(message)
+                
+                keyboard.layout = 
+                    KeyboardUtils.convertToShortLayout(longLayout)
             }
         }
     }
 
+    // Keyboard layout indicator.
     Text {
-        id: keyboardText
-
         anchors.centerIn: parent
 
         color: AppState.defaultTextColor
+        text: keyboard.layout
 
         font {
             pixelSize: AppState.defaultFontSize
