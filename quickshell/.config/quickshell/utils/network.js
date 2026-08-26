@@ -1,4 +1,4 @@
-const WIFIICONS = ["󰤯", "󰤟", "󰤢", "󰤥", "󰤨"]
+const WIFI_ICONS = ["󰤯", "󰤟", "󰤢", "󰤥", "󰤨"]
 const DISCONNECTED_ICON = "󰤫"
 
 
@@ -15,18 +15,18 @@ function chooseIcon(wifiAdapter) {
     const strength = signalStrength(network)
 
     if (strength > 0.9)
-        return WIFIICONS[4]
+        return WIFI_ICONS[4]
 
     if (strength > 0.75)
-        return WIFIICONS[3]
+        return WIFI_ICONS[3]
 
     if (strength > 0.5)
-        return WIFIICONS[2]
+        return WIFI_ICONS[2]
 
     if (strength > 0.25)
-        return WIFIICONS[1]
+        return WIFI_ICONS[1]
     
-    return WIFIICONS[0]
+    return WIFI_ICONS[0]
 }
 
 

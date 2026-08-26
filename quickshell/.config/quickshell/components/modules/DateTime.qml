@@ -18,8 +18,8 @@ Rectangle {
         precision: SystemClock.Seconds
     }
 
-    HoverHandler { 
-        id: hover 
+    HoverHandler {
+        id: hover
     }
 
     Text {
@@ -29,20 +29,21 @@ Rectangle {
         text: Qt.formatDateTime(clock.date, AppState.timeFormat)
 
         font {
-            pixelSize:AppState.defaultFontSize
+            pixelSize: AppState.defaultFontSize
             bold: AppState.defaultFontBold
         }
     }
 
     PopupWindow {
+        anchor.item: dateTime
+
+        visible: hover.hovered
+        
         implicitWidth: 100
         implicitHeight: 60
         
-        visible: hover.hovered
-        anchor.item: dateTime
-        
         anchor.rect {
-            x: -53
+            x: (dateTime.width - implicitWidth) / 2
             y: dateTime.height + 10
         }
         
@@ -56,7 +57,8 @@ Rectangle {
 
              Text {
                 anchors.centerIn: parent
-                color: AppState.defaultTextColor                
+
+                color: AppState.defaultTextColor
                 text: Qt.formatDateTime(clock.date, AppState.dateFormat)
             }
         }

@@ -15,10 +15,8 @@ Rectangle {
 
     color: AppState.defaultBackgroundColor
 
-    readonly property UPowerDevice device: 
-        UPower.devices.values.find(
-            device => device.model.startsWith("A")
-        )
+    readonly property UPowerDevice device:
+        BatteryUtils.getDevice(UPower)
 
     Text {
         anchors.centerIn: parent
@@ -31,13 +29,14 @@ Rectangle {
         id: hover
     }
 
-    // show additional information about battery.
+    // Show additional battery information on hover.
     PopupWindow {
+        anchor.item: battery
+
         implicitWidth: 80
         implicitHeight: 40
 
         visible: hover.hovered
-        anchor.item: battery
 
         color: "transparent"
 
@@ -48,6 +47,7 @@ Rectangle {
 
         Rectangle {
             anchors.fill: parent
+
             color: AppState.defaultPopupBackground
             radius: AppState.defaultPopupRadius
 
@@ -55,7 +55,7 @@ Rectangle {
                 anchors.centerIn: parent
 
                 color: AppState.defaultTextColor
-                text: BatteryUtils.description(battery.device)
+                text: BatteryUtils.tooltip(battery.device)
             }
         }
     }

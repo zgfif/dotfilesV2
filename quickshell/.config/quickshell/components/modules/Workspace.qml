@@ -9,46 +9,47 @@ Row {
     spacing: 0
 
     Repeater {
-        model: Hyprland.workspaces
+        // Exclude special workspaces (for example, -98).
+        model: Hyprland.workspaces.values.filter(workspace => workspace.id > 0)
   
-        // each rectangle corresponds one existing workspace:
-        Rectangle { 
+        Rectangle {
+            // modelData - is current model item.
             width: 24
-            height: 30  
+            height: 30
 
             color: AppState.defaultBackgroundColor
 
-            // this inner rectangle visible when pointer is over parent rectangle:
+            // Bottom indicator for active/hovered workspace.
             Rectangle {
-                height: 2
+                anchors.bottom: parent.bottom
+
                 width: parent.width
+                height: 2
 
                 color: modelData.active || mouseArea.containsMouse 
                     ? AppState.defaultTextColor 
                     : AppState.defaultBackgroundColor
 
-                anchors.bottom: parent.bottom
             }
       
             MouseArea {
                 id: mouseArea
+                
                 anchors.fill: parent
                 hoverEnabled: true
                 
                 onClicked: modelData.activate()
             }
 
-            // text for each workspace:
             Text {
-                text: modelData.id
-                
                 anchors.centerIn: parent
-
+                
                 color: AppState.defaultTextColor
+                text: modelData.id
 
                 font {
-                    pixelSize: 12
-                    bold: true
+                    pixelSize: AppState.defaultFontSize
+                    bold: AppState.defaultFontBold
                 }
             }
         }

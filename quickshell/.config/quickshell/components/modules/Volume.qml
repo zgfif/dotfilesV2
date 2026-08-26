@@ -24,7 +24,6 @@ Rectangle {
 	    objects: [volume.audioSink]
 	}
 
-    // Volume indicator.
     Text {
         anchors.centerIn: parent
 
@@ -36,7 +35,6 @@ Rectangle {
         id: hover
     }
 
-    // Show additional information on hover.
     PopupWindow {
         anchor.item: volume
         

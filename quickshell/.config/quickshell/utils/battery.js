@@ -1,44 +1,70 @@
 // battery.js
 
-const BATTERYICONS = ["󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"]
+const BATTERY_ICONS = [
+    "󰁺", 
+    "󰁻", 
+    "󰁼", 
+    "󰁽", 
+    "󰁾", 
+    "󰁿", 
+    "󰂀", 
+    "󰂁", 
+    "󰂂", 
+    "󰁹"
+]
 
 
 
-// choose icon for battery indicator
-function chooseIcon(battery) {
-    const level = battery.percentage
-
-    if (level <= 0.1)
-        return BATTERYICONS[0]
-
-    if (level <= 0.2)
-        return BATTERYICONS[1]
-    
-    if (level <= 0.3)
-        return BATTERYICONS[2]
-
-    if (level <= 0.4)
-        return BATTERYICONS[3]
-
-    if (level <= 0.5)
-        return BATTERYICONS[4]
-
-    if (level <= 0.6)
-        return BATTERYICONS[5]
-    
-    if (level <= 0.7)
-        return BATTERYICONS[6]
-    
-    if (level <= 0.8)
-        return BATTERYICONS[7]
-    
-    if (level <= 0.9)
-        return BATTERYICONS[8]
-    
-    return BATTERYICONS[9]
+function getDevice(UPower) {
+    return UPower.devices.values.find(
+        device => device.isLaptopBattery
+    ) ?? null
 }
 
 
-function description(battery) {
-    return `bat: ${(battery.percentage * 100).toFixed()}%`
+function chooseIcon(battery) {
+    if (!battery)
+        return "?"
+
+    const level = battery.percentage
+
+    if (level <= 0.1)
+        return BATTERY_ICONS[0]
+
+    if (level <= 0.2)
+        return BATTERY_ICONS[1]
+    
+    if (level <= 0.3)
+        return BATTERY_ICONS[2]
+
+    if (level <= 0.4)
+        return BATTERY_ICONS[3]
+
+    if (level <= 0.5)
+        return BATTERY_ICONS[4]
+
+    if (level <= 0.6)
+        return BATTERY_ICONS[5]
+    
+    if (level <= 0.7)
+        return BATTERY_ICONS[6]
+    
+    if (level <= 0.8)
+        return BATTERY_ICONS[7]
+    
+    if (level <= 0.9)
+        return BATTERY_ICONS[8]
+    
+    return BATTERY_ICONS[9]
+}
+
+
+
+function tooltip(battery) {
+    if (!battery)
+        return "?"
+
+    const percentage = (battery.percentage * 100).toFixed()
+    
+    return `bat: ${percentage}%`
 }

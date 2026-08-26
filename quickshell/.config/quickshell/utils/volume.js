@@ -1,26 +1,26 @@
 // volume.js
 
-const VOLUMEICONS = ["", "", "", ""]
+const VOLUME_ICONS = ["", "", "", ""]
 
 
 
 function chooseIcon(level) {
     if (level >= 0.66)
-        return VOLUMEICONS[3]
+        return VOLUME_ICONS[3]
     
     if (level >= 0.33)
-        return VOLUMEICONS[2]
+        return VOLUME_ICONS[2]
     
     if (level > 0)
-        return VOLUMEICONS[1]
+        return VOLUME_ICONS[1]
 
-    return VOLUMEICONS[0]
+    return VOLUME_ICONS[0]
 }
 
 
 
 function indicator(level, muted) {
-    return muted ? VOLUMEICONS[0] : chooseIcon(level)
+    return muted ? VOLUME_ICONS[0] : chooseIcon(level)
 }
 
 
