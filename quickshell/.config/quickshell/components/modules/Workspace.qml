@@ -11,8 +11,8 @@ Row {
     Repeater {
         // Exclude special workspaces (for example, -98).
         model: Hyprland.workspaces.values.filter(workspace => workspace.id > 0)
-  
-        Rectangle {
+          
+        Rectangle {            
             // modelData - is current model item.
             width: 24
             height: 30
