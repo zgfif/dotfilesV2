@@ -22,7 +22,8 @@ function getDevice(UPower) {
 }
 
 
-function chooseIcon(battery) {
+
+function indicator(battery) {
     if (!battery)
         return "?"
 
@@ -60,11 +61,46 @@ function chooseIcon(battery) {
 
 
 
-function tooltip(battery) {
+function tooltip(battery, deviceState) {
     if (!battery)
         return "?"
 
     const percentage = (battery.percentage * 100).toFixed()
-    
-    return `bat: ${percentage}%`
+
+    const status = getStatus(battery, deviceState)
+
+    return `bat: ${percentage}%\n[${status}]`
+}
+
+
+
+function getStatus(battery, deviceState) {
+    if (!battery)
+        return "?"
+
+    switch(battery.state) {
+        case deviceState.Empty:
+            return "Empty"
+        
+        case deviceState.Discharging:
+            return "Discharging"
+        
+        case deviceState.PendingCharge:
+            return "Charge pending"
+        
+        case deviceState.Unknown:
+            return "Unknown"
+        
+        case deviceState.PendingDischarge:
+            return "Discharge pending"
+        
+        case deviceState.Charging:
+            return "Charging"
+        
+        case deviceState.FullyCharged:
+            return "Fully charged"
+        
+        default:
+            return "?"
+    }
 }

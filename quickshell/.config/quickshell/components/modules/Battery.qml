@@ -22,7 +22,7 @@ Rectangle {
         anchors.centerIn: parent
 
         color: AppState.defaultTextColor
-        text: BatteryUtils.chooseIcon(battery.device)
+        text: BatteryUtils.indicator(battery.device)
     }
 
     HoverHandler {
@@ -33,8 +33,8 @@ Rectangle {
     PopupWindow {
         anchor.item: battery
 
-        implicitWidth: 80
-        implicitHeight: 40
+        implicitWidth: 100
+        implicitHeight: 60
 
         visible: hover.hovered
 
@@ -55,7 +55,7 @@ Rectangle {
                 anchors.centerIn: parent
 
                 color: AppState.defaultTextColor
-                text: BatteryUtils.tooltip(battery.device)
+                text: BatteryUtils.tooltip(battery.device, UPowerDeviceState)
             }
         }
     }

@@ -41,7 +41,7 @@ Rectangle {
         visible: hover.hovered
 
         implicitWidth: 80
-        implicitHeight: 46
+        implicitHeight: 60
 
         anchor.rect {
             x: (volume.width - implicitWidth) / 2

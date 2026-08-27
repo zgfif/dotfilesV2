@@ -30,7 +30,7 @@ Rectangle {
         anchor.item: powerMode
 
         implicitWidth: 80
-        implicitHeight: 50
+        implicitHeight: 60
 
         visible: hover.hovered
 

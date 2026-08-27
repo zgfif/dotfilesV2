@@ -44,7 +44,7 @@ Rectangle {
         color: "transparent"
 
         implicitWidth: 140
-        implicitHeight: 46
+        implicitHeight: 60
 
         anchor.rect {
             x: -(implicitWidth / 2) + network.width / 2

@@ -1,36 +1,50 @@
 // powerMode.js
 
-const PROFILE_ICONS = ["󰌪", "", "󱐌"]
+const PROFILES = [
+    {
+        icon: "󰌪",
+        name: "Power saver"
+    },
+    {
+        icon: "",
+        name: "Balanced"
+    },
+    {
+        icon: "󱐌",
+        name: "Performance"
+    },
+    {
+        icon: "?",
+        name: "?"
+    }
+]
+
+
+
+function getProfileInfo(powerProfiles) {
+    switch(powerProfiles.profile) {
+        case powerProfiles.PowerSaver:
+            return PROFILES[0]
+        
+        case powerProfiles.Balanced:
+               return PROFILES[1]
+
+        case powerProfiles.Performance:
+            return PROFILES[2]
+        
+        default:
+            return PROFILES[3]
+    }
+}
+
 
 
 function indicator(powerProfiles) {
-    const profile = powerProfiles.profile
-
-    if (profile === powerProfiles.PowerSaver)
-        return PROFILE_ICONS[0]
-
-    if (profile === powerProfiles.Balanced)
-        return PROFILE_ICONS[1]
-
-    if (profile === powerProfiles.Performance)
-        return PROFILE_ICONS[2]
-
-    return "?"
+    return getProfileInfo(powerProfiles).icon
 }
 
 
 
 function tooltip(powerProfiles) {
-    const profile = powerProfiles.profile
-
-    if (profile === powerProfiles.PowerSaver)
-        return "Save"
-
-    if (profile === powerProfiles.Balanced)
-        return "Balanced"
-
-    if (profile === powerProfiles.Performance)
-        return "Performance"
-
-    return "?"
+    return getProfileInfo(powerProfiles).name
 }
