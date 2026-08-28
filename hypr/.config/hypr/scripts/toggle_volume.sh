@@ -13,21 +13,21 @@ if [[ $var3 = '[MUTED]' ]]; then
 
     # send notification with "muted" message
     dunstify \
-        -a volume \
+        -a Volume \
         -r 1 \
         -t 1500 \
         -i audio-volume-muted-symbolic \
-        'muted'
+        'muted '
 
 else
     # convert 0.2 to 20
     vol=$(awk -v num="$var2" 'BEGIN {print num * 100}')
     
     dunstify \
-            -a volume \
+            -a Volume \
             -r 1 \
             -t 1500 \
             -i audio-volume-medium-symbolic \
             -h int:value:$vol \
-            'unmute'
+            'unmuted '
 fi

@@ -1,22 +1,30 @@
+// shell.qml
 import Quickshell
+
 import "./components/areas"
 import "./app"
+import "./components/modules/"
 
-PanelWindow {
-    anchors {
-        top: true
-        left: true
-        right: true
+ShellRoot {
+    PanelWindow {
+        anchors {
+            top: true
+            left: true
+            right: true
+        }
+
+        implicitHeight: 30
+        color: AppState.defaultBackgroundColor
+    
+        LeftArea {
+            anchors.left: parent.left
+        }
+
+        RightArea {
+            anchors.right: parent.right
+        }
     }
 
-    implicitHeight: 30
-    color: AppState.defaultBackgroundColor
-  
-    LeftArea {
-        anchors.left: parent.left
-    }
-
-    RightArea {
-        anchors.right: parent.right
-    }
+    MyNotification { }
 }
+

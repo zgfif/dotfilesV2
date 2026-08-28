@@ -11,8 +11,8 @@ brightness=$(( $(brightnessctl g) * 100 / $(brightnessctl m) ))
 # show notification
 notify-send \
     -r 1 \
-    -a 'volume' \
+    -a 'Brightness' \
     -h int:value:$brightness \
     -t 1500 \
     -i display-brightness-symbolic \
-    "Brightness"
+    "Brightness down"

@@ -20,6 +20,9 @@ QtObject {
     property bool defaultFontBold: true
     property string defaultFontFamily: "Arial"
 
-    // hardware parameters:
-    property string defaultBatteryName: "BAT1"
+    // Notifications
+    property string notificationBorderColor: "white"
+    property string notificationBackground: "#1E1F25"
+    property string notificationFontColor: "white"
+    property int notificationFontSize: 15
 }

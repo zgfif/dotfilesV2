@@ -1,3 +1,5 @@
+// shell.qml
+
 // PanelWindow {
 //   color: "transparent"
 
