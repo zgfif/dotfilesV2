@@ -1,0 +1,104 @@
+return {
+    image = "/home/pasha/Downloads/pictures/wallhaven-vgzygl.jpg",
+
+    background = "rgba(22, 18, 23, 1)",
+
+    error = "rgba(255, 180, 171, 1)",
+
+    error_container = "rgba(147, 0, 10, 1)",
+
+    inverse_on_surface = "rgba(52, 47, 52, 1)",
+
+    inverse_primary = "rgba(120, 79, 130, 1)",
+
+    inverse_surface = "rgba(234, 224, 231, 1)",
+
+    on_background = "rgba(234, 224, 231, 1)",
+
+    on_error = "rgba(105, 0, 5, 1)",
+
+    on_error_container = "rgba(255, 218, 214, 1)",
+
+    on_primary = "rgba(70, 33, 81, 1)",
+
+    on_primary_container = "rgba(251, 215, 255, 1)",
+
+    on_primary_fixed = "rgba(47, 10, 58, 1)",
+
+    on_primary_fixed_variant = "rgba(95, 56, 105, 1)",
+
+    on_secondary = "rgba(58, 43, 61, 1)",
+
+    on_secondary_container = "rgba(242, 219, 243, 1)",
+
+    on_secondary_fixed = "rgba(36, 23, 39, 1)",
+
+    on_secondary_fixed_variant = "rgba(81, 65, 84, 1)",
+
+    on_surface = "rgba(234, 224, 231, 1)",
+
+    on_surface_variant = "rgba(207, 195, 205, 1)",
+
+    on_tertiary = "rgba(76, 37, 34, 1)",
+
+    on_tertiary_container = "rgba(255, 218, 214, 1)",
+
+    on_tertiary_fixed = "rgba(51, 17, 15, 1)",
+
+    on_tertiary_fixed_variant = "rgba(103, 59, 55, 1)",
+
+    outline = "rgba(152, 142, 151, 1)",
+
+    outline_variant = "rgba(76, 68, 76, 1)",
+
+    primary = "rgba(231, 182, 240, 1)",
+
+    primary_container = "rgba(95, 56, 105, 1)",
+
+    primary_fixed = "rgba(251, 215, 255, 1)",
+
+    primary_fixed_dim = "rgba(231, 182, 240, 1)",
+
+    scrim = "rgba(0, 0, 0, 1)",
+
+    secondary = "rgba(214, 192, 214, 1)",
+
+    secondary_container = "rgba(81, 65, 84, 1)",
+
+    secondary_fixed = "rgba(242, 219, 243, 1)",
+
+    secondary_fixed_dim = "rgba(214, 192, 214, 1)",
+
+    shadow = "rgba(0, 0, 0, 1)",
+
+    source_color = "rgba(178, 78, 208, 1)",
+
+    surface = "rgba(22, 18, 23, 1)",
+
+    surface_bright = "rgba(61, 55, 61, 1)",
+
+    surface_container = "rgba(35, 30, 35, 1)",
+
+    surface_container_high = "rgba(46, 40, 46, 1)",
+
+    surface_container_highest = "rgba(57, 51, 57, 1)",
+
+    surface_container_low = "rgba(31, 26, 31, 1)",
+
+    surface_container_lowest = "rgba(17, 13, 18, 1)",
+
+    surface_dim = "rgba(22, 18, 23, 1)",
+
+    surface_tint = "rgba(231, 182, 240, 1)",
+
+    surface_variant = "rgba(76, 68, 76, 1)",
+
+    tertiary = "rgba(245, 183, 177, 1)",
+
+    tertiary_container = "rgba(103, 59, 55, 1)",
+
+    tertiary_fixed = "rgba(255, 218, 214, 1)",
+
+    tertiary_fixed_dim = "rgba(245, 183, 177, 1)",
+
+}
