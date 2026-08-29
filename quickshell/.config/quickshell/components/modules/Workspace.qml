@@ -1,4 +1,5 @@
 // Workspace.qml
+
 import QtQuick
 
 import Quickshell.Hyprland

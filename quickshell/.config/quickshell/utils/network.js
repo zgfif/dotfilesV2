@@ -1,3 +1,5 @@
+// network.js
+
 const WIFI_ICONS = ["󰤯", "󰤟", "󰤢", "󰤥", "󰤨"]
 const DISCONNECTED_ICON = "󰤫"
 

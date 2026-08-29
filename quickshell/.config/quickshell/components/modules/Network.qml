@@ -1,4 +1,5 @@
 // Network.qml
+
 import QtQuick
 
 import Quickshell.Networking

@@ -1,3 +1,5 @@
+// AppState.qml
+
 pragma Singleton
 
 import QtQuick

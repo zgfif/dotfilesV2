@@ -1,4 +1,5 @@
 // Volume.qml
+
 import QtQuick
 
 import Quickshell

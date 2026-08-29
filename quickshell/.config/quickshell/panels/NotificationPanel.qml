@@ -1,4 +1,4 @@
-// MyNotification.qml
+// NotificationPanel.qml
 
 import QtQuick
 
@@ -6,7 +6,7 @@ import Quickshell
 import Quickshell.Wayland
 import Quickshell.Services.Notifications
 
-import "../../app"
+import "../app"
 
 PanelWindow {
     id: notificationWindow

@@ -1,4 +1,5 @@
 // Battery.qml
+
 import QtQuick
 
 import Quickshell

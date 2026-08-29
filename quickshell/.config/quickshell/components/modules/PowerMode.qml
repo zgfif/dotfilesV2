@@ -1,4 +1,5 @@
 // PowerMode.qml
+
 import QtQuick
 
 import Quickshell

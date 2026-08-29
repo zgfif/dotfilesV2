@@ -1,4 +1,5 @@
 // Colors.qml
+
 pragma Singleton
 
 import QtQuick

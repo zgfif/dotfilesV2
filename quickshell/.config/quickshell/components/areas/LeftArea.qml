@@ -1,4 +1,7 @@
+// LeftArea.qml
+
 import QtQuick
+
 import "../modules"
 import "../../app"
 
