@@ -1,8 +1,9 @@
 // shell.qml
 import Quickshell
 
-import "./components/areas"
 import "./app"
+// import "./app/Colors.qml"
+import "./components/areas"
 import "./components/modules/"
 
 ShellRoot {

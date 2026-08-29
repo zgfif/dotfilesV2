@@ -1,6 +1,7 @@
 pragma Singleton
 
 import QtQuick
+import "Colors.qml"
 
 QtObject {
     // Common parameters:
@@ -21,7 +22,7 @@ QtObject {
     property string defaultFontFamily: "Arial"
 
     // Notifications
-    property string notificationBorderColor: "white"
+    property string notificationBorderColor: Colors.md3.primary
     property string notificationBackground: "#1E1F25"
     property string notificationFontColor: "white"
     property int notificationFontSize: 15

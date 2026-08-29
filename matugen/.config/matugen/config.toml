@@ -13,3 +13,7 @@ command = "changewallpaper {{ image }}"
 input_path = '~/.config/matugen/templates/hyprland-colors.lua'
 output_path = '~/.config/hypr/colors.lua' # If using lua config replace *.conf* with *.
 
+[templates.quickshell]
+input_path = '~/.config/matugen/templates/quickshell-colors.json'
+output_path = '~/.local/state/quickshell/generated/colors.json'
+
