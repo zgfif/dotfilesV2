@@ -12,9 +12,9 @@ read -r var1 var2 var3 <<< $status
 if [[ $var3 = '[MUTED]' ]]; then
 
     # send notification with "muted" message
-    dunstify \
-        -a Volume \
+    notify-send \
         -r 1 \
+        -a Volume \
         -t 1500 \
         -i audio-volume-muted-symbolic \
         'muted '

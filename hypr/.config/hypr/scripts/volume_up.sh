@@ -11,13 +11,12 @@ read -r var1 var2 <<< $volume
    
 # assign 0.2 * 100
 vol=$(awk -v num="$var2" 'BEGIN {print num * 100}')
- 
-# echo $vol
 
+# show notification
 notify-send \
-    -a "volume" \
-    -i audio-volume-high-symbolic \
-    -h int:value:"$vol" \
     -r 1 \
+    -a "volume" \
+    -h int:value:"$vol" \
     -t 1500 \
+    -i audio-volume-high-symbolic \
     "Volume $vol%"

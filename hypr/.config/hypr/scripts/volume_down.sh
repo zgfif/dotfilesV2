@@ -15,9 +15,9 @@ vol=$(awk -v num="$var2" 'BEGIN {print num * 100}')
 # echo $vol
 
 notify-send \
+        -r 1 \
         -a "volume" \
         -h int:value:$vol \
-        -r 1 \
         -t 1500 \
         "Volume $vol%"
 

@@ -67,7 +67,7 @@ PanelWindow {
 
     NotificationServer {
         onNotification: (notification) => {
-            summary = notification.summary
+            summary = `${notification.summary}\n${notification.body}`
             notificationWindow.visible = true
             timer.start()
         }

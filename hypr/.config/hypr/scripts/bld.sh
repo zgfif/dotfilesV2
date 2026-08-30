@@ -1,4 +1,3 @@
-
 #!/usr/bin/bash
 
 name="OPPO Enco Air4 Pro"
@@ -10,4 +9,3 @@ disconnect $mac_addr
 EOF
 
 notify-send "disconnecting $name..."
-
