@@ -47,6 +47,11 @@ Rectangle {
     }
 
     PowerMode {
+        id: powerMode
         anchors.right: network.left
+    }
+
+    Bluetooth {
+        anchors.right: powerMode.left
     }
 }

@@ -13,6 +13,7 @@ Rectangle {
 
     width: 30
     height: 30
+
     color: AppState.defaultBackgroundColor
 
     readonly property var wifiAdapter: Networking.devices.values.find(
@@ -40,15 +41,16 @@ Rectangle {
 
     PopupWindow {
         anchor.item: network
+        
         visible: hover.hovered
-
-        color: "transparent"
 
         implicitWidth: 140
         implicitHeight: 60
-
+    
+        color: "transparent"
+    
         anchor.rect {
-            x: -(implicitWidth / 2) + network.width / 2
+            x: (network.width - implicitWidth) / 2
             y: network.height + 10
         }
 
