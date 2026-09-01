@@ -1,7 +1,7 @@
 // bluetooth.js
 
 function indicator(bluetoothAdapter) {
-    if (!bluetoothAdapter.enabled)
+    if (!bluetoothAdapter?.enabled)
         return "󰂲"
 
     if (!getConnectedDevice(bluetoothAdapter))

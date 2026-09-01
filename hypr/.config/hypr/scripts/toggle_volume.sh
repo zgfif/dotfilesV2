@@ -23,11 +23,11 @@ else
     # convert 0.2 to 20
     vol=$(awk -v num="$var2" 'BEGIN {print num * 100}')
     
-    dunstify \
-            -a Volume \
+    notify-send \
             -r 1 \
+            -a Volume \
+            -h int:value:$vol \
             -t 1500 \
             -i audio-volume-medium-symbolic \
-            -h int:value:$vol \
             'unmuted '
 fi
