@@ -24,6 +24,11 @@ Rectangle {
 
         color: AppState.defaultTextColor
         text: BatteryUtils.indicator(battery.device)
+
+        font {
+            pixelSize: AppState.defaultFontSize
+            bold: AppState.defaultFontBold
+        }
     }
 
     HoverHandler {

@@ -37,6 +37,11 @@ Rectangle {
         anchors.centerIn: parent
         color: AppState.defaultTextColor
         text: NetworkUtils.chooseIcon(network.wifiAdapter)
+
+        font {
+            pixelSize: AppState.defaultFontSize
+            bold: AppState.defaultFontBold
+        }
     }
 
     PopupWindow {
@@ -44,7 +49,7 @@ Rectangle {
         
         visible: hover.hovered
 
-        implicitWidth: 140
+        implicitWidth: 100
         implicitHeight: 60
     
         color: "transparent"

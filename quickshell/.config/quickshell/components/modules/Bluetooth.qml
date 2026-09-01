@@ -1,3 +1,5 @@
+// Bluetooth.qml
+
 import QtQuick
 
 import Quickshell
@@ -5,8 +7,9 @@ import Quickshell.Bluetooth
 
 import "../../app"
 import "../../utils/bluetooth.js" as BluetoothUtils
+
 Rectangle {
-    id: blth
+    id: bluetooth
 
     readonly property var bluetoothAdapter: Bluetooth.defaultAdapter 
 
@@ -21,23 +24,29 @@ Rectangle {
 
     Text {
         anchors.centerIn: parent
+
         color: AppState.defaultTextColor
-        text: BluetoothUtils.indicator()
+        text: BluetoothUtils.indicator(bluetoothAdapter)
+
+        font {
+            pixelSize: AppState.defaultFontSize
+            bold: AppState.defaultFontBold
+        }
     }
 
     PopupWindow {
-        anchor.item: blth
+        anchor.item: bluetooth
         
         visible: hover.hovered       
         
-        implicitWidth: 180
+        implicitWidth: 140
         implicitHeight: 60
 
         color: "transparent"
         
         anchor.rect {
-            x: (blth.width - implicitWidth) / 2
-            y: parent.height + 10
+            x: (bluetooth.width - implicitWidth) / 2
+            y: bluetooth.height + 10
         }
 
         Rectangle {
@@ -52,5 +61,4 @@ Rectangle {
             }
         }
     }
-
 }

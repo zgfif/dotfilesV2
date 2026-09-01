@@ -30,6 +30,11 @@ Rectangle {
 
         color: AppState.defaultTextColor
         text: VolumeUtils.indicator(level, muted)
+
+        font {
+            pixelSize: AppState.defaultFontSize
+            bold: AppState.defaultFontBold
+        }
     }
 
     HoverHandler {

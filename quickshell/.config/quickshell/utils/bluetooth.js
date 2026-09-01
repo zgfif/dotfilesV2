@@ -1,25 +1,41 @@
-function indicator() {
-    return "󰂯"
+// bluetooth.js
+
+function indicator(bluetoothAdapter) {
+    if (!bluetoothAdapter.enabled)
+        return "󰂲"
+
+    if (!getConnectedDevice(bluetoothAdapter))
+        return "󰂯"
+
+    return "󰂰"
 }
+
 
 
 function tooltip(bluetoothAdapter) {
-    const connectedDevice = getConnectedDevice(bluetoothAdapter)
+    const device = getConnectedDevice(bluetoothAdapter)
     
-    if (!connectedDevice)
-        return "not connected"
+    if (!device)
+        return "disconnected"
+    
+    if (!device.batteryAvailable)
+        return "no battery"
 
-    const battery = (connectedDevice.batteryAvailable) ? convertTopercentage(connectedDevice.battery) : 0
+    const deviceName = device.name ?? ""
 
-    return `${connectedDevice.name} (${battery}%)`
+    const deviceBattery = device.battery ?? 0
+
+    return `${deviceName}\n${toPercents(deviceBattery)}%`
 }
 
-
-function convertTopercentage(number) {
-    return (number * 100).toFixed()
-}
 
 
 function getConnectedDevice(bluetoothAdapter) {
     return bluetoothAdapter?.devices.values.find(device => device.connected)
+}
+
+
+
+function toPercents(number) {
+    return (number * 100).toFixed()
 }
