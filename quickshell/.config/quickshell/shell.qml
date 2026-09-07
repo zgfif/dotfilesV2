@@ -7,4 +7,5 @@ import "./panels"
 ShellRoot {
     HorizontalPanel { }
     NotificationPanel { }
+    AppPanel {}
 }
