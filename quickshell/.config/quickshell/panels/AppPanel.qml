@@ -66,6 +66,7 @@ PanelWindow {
                 background: Rectangle {
                     color: "black"
                 }
+                
                 placeholderText: "Search..."
                 
                 Keys.onPressed: (event) => {
@@ -77,7 +78,7 @@ PanelWindow {
                                 command: [firstElement.execc]
                             })
 
-                            // cleaning input
+                            // cleaning search input
                             searchInput.text = ""
 
                             // hide pannel
@@ -88,7 +89,7 @@ PanelWindow {
             }
         }
 
-        // items area
+        // apps list area
         Rectangle {
             id: itemsArea
 
@@ -110,16 +111,17 @@ PanelWindow {
                 id: appListView
 
                 anchors.fill: parent
+
                 model: nameFilterModel
-                // model: appsModel
                 delegate: appItem
+
                 spacing: 10
                 clip: true
             }
         }
     }
 
-    // app in apps list
+    // app element in apps list
     Component {
         id: appItem
         
@@ -131,6 +133,20 @@ PanelWindow {
             height: AppState.launcherItemHeight
 
             color: "black"
+            
+            Rectangle {
+                implicitWidth: 50
+                implicitHeight: parent.height
+
+                color: "black"
+
+                IconImage {
+                    anchors.centerIn: parent
+                    height: 30
+                    width: 30
+                    source: Quickshell.iconPath(icon)
+                }
+            }
 
             Text {
                 anchors.fill: parent
@@ -139,16 +155,9 @@ PanelWindow {
 
                 font.pixelSize: 16
                 font.family: AppState.defaultFontFamily
-                leftPadding: 10
+                leftPadding: 60
 
                 color: "white"
-            }
-
-            // make the first element of the app list grey.
-            Component.onCompleted: {
-                if (index === 0) {
-                    color = "grey"
-                }
             }
         }
     }
@@ -177,7 +186,7 @@ PanelWindow {
         ]
     }
 
-    // Process to retrieve
+    // Process to retrieve apps details
     Process {
         id: desktopsProcess
 
@@ -202,7 +211,7 @@ PanelWindow {
         }
     }
 
-    // React on keyboard shortcut.
+    // React on keyboard shortcut defined in hyprland configuration.
     GlobalShortcut {
         name: "appLauncher"
         
