@@ -38,6 +38,8 @@ PanelWindow {
 
         border.color: AppState.launcherBorderColor
 
+        color: "black"
+
         // search input.
         Rectangle {
             implicitWidth: AppState.launcherSearchWidth
@@ -48,12 +50,41 @@ PanelWindow {
 
             anchors.horizontalCenter: parent.horizontalCenter
 
-            color: "white"
+            color: "black"
 
             TextField {
                 id: searchInput
+                anchors.fill: parent
                 focus: true
+
+                font.pixelSize: AppState.launcherFontSize
+
+                // the color of entered text.
+                color: "white"
+
+                // background of the text field we use rectangle with color.
+                background: Rectangle {
+                    color: "black"
+                }
                 placeholderText: "Search..."
+                
+                Keys.onPressed: (event) => {
+                    if (event.key === Qt.Key_Return) {
+                        var firstElement = appListView.itemAtIndex(0)
+                        
+                        if (firstElement) {                            
+                            Quickshell.execDetached({
+                                command: [firstElement.execc]
+                            })
+
+                            // cleaning input
+                            searchInput.text = ""
+
+                            // hide pannel
+                            appLauncher.visible = false
+                        }
+                    }
+                }                
             }
         }
 
@@ -64,7 +95,7 @@ PanelWindow {
             implicitWidth: AppState.launcherItemsWidth
             implicitHeight: AppState.launcherItemsHeight
 
-            color: "blue"
+            color: "black"
 
             anchors.top: parent.top
             anchors.topMargin: 60
@@ -72,44 +103,55 @@ PanelWindow {
 
             ListModel {
                 id: appsModel
-
-                ListElement { name: "Firefox"; exec: "firefox" }
-                ListElement { name: "Neovim"; exec: "nvim" }
-                ListElement { name: "Obsidian"; exec: "obsidian" }
-                ListElement { name: "Telegram"; exec: "Telegram" }
             }
 
             // display apps list
             ListView {
+                id: appListView
+
                 anchors.fill: parent
                 model: nameFilterModel
+                // model: appsModel
                 delegate: appItem
                 spacing: 10
+                clip: true
             }
         }
     }
-    
+
     // app in apps list
     Component {
         id: appItem
         
         Rectangle {
+            property string namee: name
+            property string execc: exec
+
             width: AppState.launcherItemWidth
             height: AppState.launcherItemHeight
 
-            color: "red"
+            color: "black"
 
             Text {
                 anchors.fill: parent
                 verticalAlignment: Text.AlignVCenter
-                text: name 
+                text: name
 
                 font.pixelSize: 16
+                font.family: AppState.defaultFontFamily
                 leftPadding: 10
+
+                color: "white"
+            }
+
+            // make the first element of the app list grey.
+            Component.onCompleted: {
+                if (index === 0) {
+                    color = "grey"
+                }
             }
         }
     }
-
 
     // вводим в searchInput и фильтруем appsModel
     SortFilterProxyModel {
@@ -120,22 +162,46 @@ PanelWindow {
         filters: [
             FunctionFilter {
                 property string searchText: searchInput.text
-                
+      
                 component RoleData: QtObject { 
                     property string name 
                 }
 
                 function filter(data: RoleData) : bool {
                     return data.name.toLowerCase().includes(searchText.toLowerCase())
+
                 }
 
-                onSearchTextChanged: {
-                    invalidate()
-                }
+                onSearchTextChanged: invalidate()
             }
         ]
     }
-    
+
+    // Process to retrieve
+    Process {
+        id: desktopsProcess
+
+        running: false
+
+        command: ["sh", "-c", "~/.config/quickshell/utils/apps_details.sh"]
+
+         stdout: StdioCollector {
+            onStreamFinished: {
+                appsModel.clear()
+
+                const lines = this.text.trim().split("\n")
+
+                for (let line of lines) {
+                    let values = line.split(" ___ ")
+                    
+                    appsModel.append(
+                        { name: values[0], exec: values[1].split(" ")[0], icon: values[2] }
+                    )
+                }
+            }
+        }
+    }
+
     // React on keyboard shortcut.
     GlobalShortcut {
         name: "appLauncher"
@@ -143,5 +209,11 @@ PanelWindow {
         onPressed: {
             appLauncher.visible = !appLauncher.visible // toggle visibility of the App launcher.
         }
+    }
+
+    Component.onCompleted: {
+        // load the apps details after start up the quickshell
+        appsModel.clear()
+        desktopsProcess.running = true
     }
 }
