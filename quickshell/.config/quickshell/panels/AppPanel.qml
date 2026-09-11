@@ -71,11 +71,11 @@ PanelWindow {
                 
                 Keys.onPressed: (event) => {
                     if (event.key === Qt.Key_Return) {
-                        var firstElement = appListView.itemAtIndex(0)
+                        var currentItem = appListView.currentItem
                         
-                        if (firstElement) {                            
+                        if (currentItem) {
                             Quickshell.execDetached({
-                                command: [firstElement.execc]
+                                command: [currentItem.exec]
                             })
 
                             // cleaning search input
@@ -83,6 +83,21 @@ PanelWindow {
 
                             // hide pannel
                             appLauncher.visible = false
+                            
+                            // reset index
+                            appListView.currentIndex = 0
+                        }
+                    }
+
+                    if (event.key === Qt.Key_Up) {
+                        if (appListView.currentIndex > 0) {
+                            appListView.currentIndex-- 
+                        }
+                    }
+
+                    if (event.key === Qt.Key_Down) {
+                        if ((appListView.count > 0) && (appListView.currentIndex < appListView.count - 1)) {
+                            appListView.currentIndex++
                         }
                     }
                 }                
@@ -102,88 +117,22 @@ PanelWindow {
             anchors.topMargin: 60
             anchors.horizontalCenter: parent.horizontalCenter
 
-            ListModel {
-                id: appsModel
-            }
-
             // display apps list
             ListView {
                 id: appListView
 
                 anchors.fill: parent
 
-                model: nameFilterModel
-                delegate: appItem
+                model: proxyModel
+
+                currentIndex: 0
 
                 spacing: 10
                 clip: true
+
+                delegate: appRectangle
             }
         }
-    }
-
-    // app element in apps list
-    Component {
-        id: appItem
-        
-        Rectangle {
-            property string namee: name
-            property string execc: exec
-
-            width: AppState.launcherItemWidth
-            height: AppState.launcherItemHeight
-
-            color: "black"
-            
-            Rectangle {
-                implicitWidth: 50
-                implicitHeight: parent.height
-
-                color: "black"
-
-                IconImage {
-                    anchors.centerIn: parent
-                    height: 30
-                    width: 30
-                    source: Quickshell.iconPath(icon)
-                }
-            }
-
-            Text {
-                anchors.fill: parent
-                verticalAlignment: Text.AlignVCenter
-                text: name
-
-                font.pixelSize: 16
-                font.family: AppState.defaultFontFamily
-                leftPadding: 60
-
-                color: "white"
-            }
-        }
-    }
-
-    // вводим в searchInput и фильтруем appsModel
-    SortFilterProxyModel {
-        id: nameFilterModel
-
-        model: appsModel
-
-        filters: [
-            FunctionFilter {
-                property string searchText: searchInput.text
-      
-                component RoleData: QtObject { 
-                    property string name 
-                }
-
-                function filter(data: RoleData) : bool {
-                    return data.name.toLowerCase().includes(searchText.toLowerCase())
-
-                }
-
-                onSearchTextChanged: invalidate()
-            }
-        ]
     }
 
     // Process to retrieve apps details
@@ -199,18 +148,21 @@ PanelWindow {
                 appsModel.clear()
 
                 const lines = this.text.trim().split("\n")
-
                 for (let line of lines) {
                     let values = line.split(" ___ ")
                     
                     appsModel.append(
-                        { name: values[0], exec: values[1].split(" ")[0], icon: values[2] }
+                        { 
+                            name: values[0], 
+                            exec: values[1].split(" ")[0], 
+                            icon: values[2]
+                        }
                     )
                 }
             }
         }
     }
-
+    
     // React on keyboard shortcut defined in hyprland configuration.
     GlobalShortcut {
         name: "appLauncher"
@@ -224,5 +176,79 @@ PanelWindow {
         // load the apps details after start up the quickshell
         appsModel.clear()
         desktopsProcess.running = true
+    }
+
+    // модель для хранения данных приложений.
+    ListModel {
+        id: appsModel
+    }
+
+    Component {
+        id: appRectangle
+        
+        Rectangle {
+            required property string name
+            required property string icon
+            required property string exec
+
+            property bool isCurrent: ListView.isCurrentItem
+
+            width: AppState.launcherItemWidth
+            height: AppState.launcherItemHeight
+
+            color: isCurrent ? "grey" : "black"
+
+            // Rectangle for app icon
+            Rectangle {
+                implicitWidth: 50
+                implicitHeight: parent.height
+
+                color: isCurrent ? "grey" : "black"
+
+                IconImage {
+                    anchors.centerIn: parent
+                    
+                    width: 30
+                    height: 30
+                    
+                    source: Quickshell.iconPath(icon)
+                }
+            }
+
+                // Text for app name
+            Text {
+                anchors.fill: parent
+                verticalAlignment: Text.AlignVCenter
+                text: name
+
+                font.pixelSize: 16
+                font.family: AppState.defaultFontFamily
+                leftPadding: 60
+
+                color: "white"
+            }
+        }
+    }
+
+    SortFilterProxyModel {
+        id: proxyModel
+
+        model: appsModel
+        filters: [
+             FunctionFilter {
+                readonly property string text: searchInput.text.toLowerCase()
+
+                component RoleData: QtObject { property string name }
+                
+                function filter(data: RoleData) : bool {
+                    return (data.name.toLowerCase().includes(text))
+                }
+
+                onTextChanged: {
+                    invalidate()
+                    appListView.currentIndex = 0
+                }
+            }
+        ]
     }
 }

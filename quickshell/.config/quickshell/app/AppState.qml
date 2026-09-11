@@ -33,7 +33,7 @@ QtObject {
     // Application launcher
     property int launcherFontSize: 16
     property int launcherWidth: 300
-    property int launcherHeight: 400
+    property int launcherHeight: 300
     
     property string launcherBorderColor: Colors.md3.primary
     property int launcherBorderRadius: 10
@@ -42,7 +42,7 @@ QtObject {
     property int launcherSearchHeight: 40
 
     property int launcherItemsWidth: 280
-    property int launcherItemsHeight: 300
+    property int launcherItemsHeight: 220
 
     property int launcherItemWidth: 280
     property int launcherItemHeight: 50
