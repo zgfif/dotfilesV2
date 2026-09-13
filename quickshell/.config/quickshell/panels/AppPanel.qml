@@ -40,67 +40,53 @@ PanelWindow {
 
         color: "black"
 
-        // search input.
-        Rectangle {
+        TextField {
+            id: searchInput
+
             implicitWidth: AppState.launcherSearchWidth
             implicitHeight: AppState.launcherSearchHeight
 
-            anchors.top: parent.top
-            anchors.topMargin: 10
+            anchors { 
+                top: parent.top
+                topMargin: 10
+                horizontalCenter: parent.horizontalCenter
+            }
 
-            anchors.horizontalCenter: parent.horizontalCenter
+            focus: true
 
-            color: "black"
+            font.pixelSize: AppState.launcherFontSize
 
-            TextField {
-                id: searchInput
-                anchors.fill: parent
-                focus: true
+            // the color of entered text.
+            color: "white"
 
-                font.pixelSize: AppState.launcherFontSize
-
-                // the color of entered text.
-                color: "white"
-
-                // background of the text field we use rectangle with color.
-                background: Rectangle {
-                    color: "black"
-                }
-                
-                placeholderText: "Search..."
-                
-                Keys.onPressed: (event) => {
-                    if (event.key === Qt.Key_Return) {
-                        var currentItem = appListView.currentItem
-                        
-                        if (currentItem) {
-                            Quickshell.execDetached({
-                                command: [currentItem.exec]
-                            })
-
-                            // cleaning search input
-                            searchInput.text = ""
-
-                            // hide pannel
-                            appLauncher.visible = false
-                            
-                            // reset index
-                            appListView.currentIndex = 0
-                        }
+            // TextField's background property can't accept color 
+            // as value so I use Rectanlge with color.
+            background: Rectangle { color: "black" }
+            
+            Keys.onPressed: (event) => {
+                if (event.key === Qt.Key_Return) {
+                    var currentItem = appListView.currentItem
+                    
+                    if (currentItem) {
+                        Quickshell.execDetached({
+                            command: [currentItem.exec]
+                        })
+                        searchInput.text = ""
+                        appLauncher.visible = false
+                        appListView.currentIndex = 0
+                    }
+                } else if (event.key === Qt.Key_Up) {
+                    if (appListView.currentIndex > 0) {
+                        appListView.currentIndex-- 
                     }
 
-                    if (event.key === Qt.Key_Up) {
-                        if (appListView.currentIndex > 0) {
-                            appListView.currentIndex-- 
-                        }
+                } else if (event.key === Qt.Key_Down) {
+                    if (appListView.count > 0 && 
+                        appListView.currentIndex < appListView.count - 1) {
+                        appListView.currentIndex++
                     }
 
-                    if (event.key === Qt.Key_Down) {
-                        if ((appListView.count > 0) && (appListView.currentIndex < appListView.count - 1)) {
-                            appListView.currentIndex++
-                        }
-                    }
-                }                
+                }            
             }
         }
 
@@ -108,14 +94,16 @@ PanelWindow {
         Rectangle {
             id: itemsArea
 
-            implicitWidth: AppState.launcherItemsWidth
-            implicitHeight: AppState.launcherItemsHeight
+            width: AppState.launcherItemsWidth
+            height: AppState.launcherItemsHeight
 
             color: "black"
 
-            anchors.top: parent.top
-            anchors.topMargin: 60
-            anchors.horizontalCenter: parent.horizontalCenter
+            anchors { 
+                top: parent.top
+                topMargin: 60
+                horizontalCenter: parent.horizontalCenter
+            }
 
             // display apps list
             ListView {
@@ -130,7 +118,7 @@ PanelWindow {
                 spacing: 10
                 clip: true
 
-                delegate: appRectangle
+                delegate: appDelegate
             }
         }
     }
@@ -139,17 +127,24 @@ PanelWindow {
     Process {
         id: desktopsProcess
 
-        running: false
-
         command: ["sh", "-c", "~/.config/quickshell/utils/apps_details.sh"]
 
          stdout: StdioCollector {
             onStreamFinished: {
                 appsModel.clear()
 
-                const lines = this.text.trim().split("\n")
-                for (let line of lines) {
+                const output = this.text.trim()
+
+                if (!output)
+                    return
+
+                const lines = output.split("\n")
+
+                for (const line of lines) {
                     let values = line.split(" ___ ")
+
+                    if (values.length < 3)
+                        continue
                     
                     appsModel.append(
                         { 
@@ -179,12 +174,10 @@ PanelWindow {
     }
 
     // модель для хранения данных приложений.
-    ListModel {
-        id: appsModel
-    }
+    ListModel { id: appsModel }
 
     Component {
-        id: appRectangle
+        id: appDelegate
         
         Rectangle {
             required property string name
@@ -198,34 +191,32 @@ PanelWindow {
 
             color: isCurrent ? "grey" : "black"
 
-            // Rectangle for app icon
-            Rectangle {
-                implicitWidth: 50
-                implicitHeight: parent.height
-
-                color: isCurrent ? "grey" : "black"
-
-                IconImage {
-                    anchors.centerIn: parent
-                    
-                    width: 30
-                    height: 30
-                    
-                    source: Quickshell.iconPath(icon)
+            IconImage {
+                anchors {
+                    left: parent.left
+                    leftMargin: 10
+                    verticalCenter: parent.verticalCenter
                 }
+
+                width: 30
+                height: 30
+                
+                source: Quickshell.iconPath(icon)
             }
 
-                // Text for app name
             Text {
                 anchors.fill: parent
-                verticalAlignment: Text.AlignVCenter
-                text: name
 
-                font.pixelSize: 16
-                font.family: AppState.defaultFontFamily
                 leftPadding: 60
+                verticalAlignment: Text.AlignVCenter
+
+                font { 
+                    pixelSize: 16
+                    family: AppState.defaultFontFamily
+                }
 
                 color: "white"
+                text: name
             }
         }
     }
@@ -236,15 +227,15 @@ PanelWindow {
         model: appsModel
         filters: [
              FunctionFilter {
-                readonly property string text: searchInput.text.toLowerCase()
+                readonly property string searchText: searchInput.text.toLowerCase()
 
                 component RoleData: QtObject { property string name }
                 
                 function filter(data: RoleData) : bool {
-                    return (data.name.toLowerCase().includes(text))
+                    return (data.name.toLowerCase().includes(searchText))
                 }
 
-                onTextChanged: {
+                onSearchTextChanged: {
                     invalidate()
                     appListView.currentIndex = 0
                 }
