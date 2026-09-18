@@ -10,6 +10,7 @@ import Quickshell.Wayland
 import Quickshell.Widgets
 
 import "../app"
+import "../utils/app_launcher.js" as LauncherUtils
 
 PanelWindow {
     id: appLauncher
@@ -74,6 +75,17 @@ PanelWindow {
                         searchInput.text = ""
                         appLauncher.visible = false
                         appListView.currentIndex = 0
+
+                        const appsFileText = jsonFile.text()
+
+                        const appsData = appsFileText.length > 0 ? JSON.parse(appsFileText) : { apps: [] }
+                        
+                        const newData = LauncherUtils.updateAppsData(
+                            appsData, 
+                            currentItem.name
+                        )
+                        console.log(JSON.stringify(newData))
+                        jsonFile.setData(JSON.stringify(newData))
                     }
                 } else if (event.key === Qt.Key_Up) {
                     if (appListView.currentIndex > 0) {
@@ -123,41 +135,6 @@ PanelWindow {
         }
     }
 
-    // Process to retrieve apps details
-    Process {
-        id: desktopsProcess
-
-        command: ["sh", "-c", "~/.config/quickshell/utils/apps_details.sh"]
-
-         stdout: StdioCollector {
-            onStreamFinished: {
-                appsModel.clear()
-
-                const output = this.text.trim()
-
-                if (!output)
-                    return
-
-                const lines = output.split("\n")
-
-                for (const line of lines) {
-                    let values = line.split(" ___ ")
-
-                    if (values.length < 3)
-                        continue
-                    
-                    appsModel.append(
-                        { 
-                            name: values[0], 
-                            exec: values[1].split(" ")[0], 
-                            icon: values[2]
-                        }
-                    )
-                }
-            }
-        }
-    }
-    
     // React on keyboard shortcut defined in hyprland configuration.
     GlobalShortcut {
         name: "appLauncher"
@@ -168,14 +145,17 @@ PanelWindow {
     }
 
     Component.onCompleted: {
-        // load the apps details after start up the quickshell
+        // performs after start up the whole quickshell.
         appsModel.clear()
         desktopsProcess.running = true
+        lauchedAppsFileProcess.running = true
+        console.log("component on completed appLauncher")
     }
 
     // модель для хранения данных приложений.
     ListModel { id: appsModel }
 
+    // component used to show one app in app launcher.
     Component {
         id: appDelegate
         
@@ -223,8 +203,11 @@ PanelWindow {
 
     SortFilterProxyModel {
         id: proxyModel
+        
+        // readonly property var appsCounts: JSON.parse(jsonFile.text())
 
         model: appsModel
+        
         filters: [
              FunctionFilter {
                 readonly property string searchText: searchInput.text.toLowerCase()
@@ -241,5 +224,62 @@ PanelWindow {
                 }
             }
         ]
+    }
+
+    FileView {
+        id: jsonFile
+
+        path: lauchedAppsFileProcess.filePath
+
+        blockLoading: true
+
+        onLoaded: {
+            console.log(path)
+        }
+
+        onSaveFailed: { 
+            (error) => console.log(error) 
+        }
+        onSaved: {
+            console.log("saving")
+        }
+    }
+ 
+    // Process to retrieve desktops details from OS.
+    Process {
+        id: desktopsProcess
+
+        command: ["sh", "-c", "~/.config/quickshell/utils/apps_details.sh"]
+
+         stdout: StdioCollector {
+            onStreamFinished: {
+                appsModel.clear()
+
+                const text = jsonFile.text()
+
+                const launchedAppsArray = text.length > 0 ? JSON.parse(text) : { apps: [] }
+                
+                const desktopsArray = LauncherUtils.buildDesktopsArray(this.text, launchedAppsArray)
+
+                for (const desktop of desktopsArray) {
+                    appsModel.append(desktop)
+                }
+            }
+        }
+    }
+
+    // create/validate existing file to store recently launched apps.
+    Process {
+        id: lauchedAppsFileProcess
+
+        readonly property string filePath: "/home/pasha/.config/quickshell/launched_apps.json"
+        
+        command: ["touch", filePath]
+        
+        stdout: StdioCollector {
+            onStreamFinished: {
+                console.log(`validate ${lauchedAppsFileProcess.filePath}`)
+            }
+        }
     }
 }
