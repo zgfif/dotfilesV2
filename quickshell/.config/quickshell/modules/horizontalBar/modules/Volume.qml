@@ -6,8 +6,8 @@ import Quickshell
 
 import Quickshell.Services.Pipewire
 
-import "../../app"
-import "../../utils/volume.js" as VolumeUtils
+import "../../../app"
+import "../utils/volume.js" as VolumeUtils
 
 Rectangle {
     id: volume

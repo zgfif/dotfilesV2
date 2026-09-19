@@ -1,4 +1,4 @@
-// AppPanel.qml
+// ApplicationLauncher.qml
 
 import QtQuick
 import QtQuick.Controls
@@ -9,8 +9,8 @@ import Quickshell.Hyprland
 import Quickshell.Wayland
 import Quickshell.Widgets
 
-import "../app"
-import "../utils/app_launcher.js" as LauncherUtils
+import "../../app"
+import "./application_launcher.js" as LauncherUtils
 
 PanelWindow {
     id: appLauncher
@@ -84,8 +84,10 @@ PanelWindow {
                             appsData, 
                             currentItem.name
                         )
-                        console.log(JSON.stringify(newData))
+
                         jsonFile.setData(JSON.stringify(newData))
+
+                        desktopsProcess.running = true
                     }
                 } else if (event.key === Qt.Key_Up) {
                     if (appListView.currentIndex > 0) {
@@ -149,7 +151,6 @@ PanelWindow {
         appsModel.clear()
         desktopsProcess.running = true
         lauchedAppsFileProcess.running = true
-        console.log("component on completed appLauncher")
     }
 
     // модель для хранения данных приложений.
@@ -232,36 +233,27 @@ PanelWindow {
         path: lauchedAppsFileProcess.filePath
 
         blockLoading: true
-
-        onLoaded: {
-            console.log(path)
-        }
-
-        onSaveFailed: { 
-            (error) => console.log(error) 
-        }
-        onSaved: {
-            console.log("saving")
-        }
     }
  
     // Process to retrieve desktops details from OS.
     Process {
         id: desktopsProcess
 
-        command: ["sh", "-c", "~/.config/quickshell/utils/apps_details.sh"]
+        command: [
+            "sh", 
+            "-c", 
+            "~/.config/quickshell/modules/applicationLauncher/scripts/desktops.sh"
+        ]
 
          stdout: StdioCollector {
             onStreamFinished: {
                 appsModel.clear()
-
-                const text = jsonFile.text()
-
-                const launchedAppsArray = text.length > 0 ? JSON.parse(text) : { apps: [] }
                 
-                const desktopsArray = LauncherUtils.buildDesktopsArray(this.text, launchedAppsArray)
+                const launchedArray = jsonFile.text().length > 0 ? JSON.parse(jsonFile.text()) : { apps: [] }
 
-                for (const desktop of desktopsArray) {
+                const modifiedArray = LauncherUtils.buildDesktopsArray(this.text, launchedArray)
+
+                for (const desktop of modifiedArray) {
                     appsModel.append(desktop)
                 }
             }
@@ -272,7 +264,7 @@ PanelWindow {
     Process {
         id: lauchedAppsFileProcess
 
-        readonly property string filePath: "/home/pasha/.config/quickshell/launched_apps.json"
+        readonly property string filePath: "/home/pasha/.config/quickshell/modules/applicationLauncher/data/launched_apps.json"
         
         command: ["touch", filePath]
         

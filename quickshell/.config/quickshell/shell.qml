@@ -2,10 +2,12 @@
 
 import Quickshell
 
-import "./panels"
+import "./modules/applicationLauncher/"
+import "./modules/horizontalBar/"
+import "./modules/notification/"
 
 ShellRoot {
-    HorizontalPanel { }
-    NotificationPanel { }
-    AppPanel { }
+    ApplicationLauncher { }
+    HorizontalBar { }
+    Notification { }
 }

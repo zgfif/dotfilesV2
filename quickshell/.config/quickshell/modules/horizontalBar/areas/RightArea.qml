@@ -3,7 +3,7 @@
 import QtQuick
 
 import "../modules"
-import "../../app"
+import "../../../app"
 
 Rectangle {
     implicitHeight: 30

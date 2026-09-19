@@ -1,32 +1,29 @@
-// Bluetooth.qml
+// Battery.qml
 
 import QtQuick
 
 import Quickshell
-import Quickshell.Bluetooth
+import Quickshell.Services.UPower
 
-import "../../app"
-import "../../utils/bluetooth.js" as BluetoothUtils
+import "../../../app"
+import "../utils/battery.js" as BatteryUtils
 
 Rectangle {
-    id: bluetooth
-
-    readonly property var bluetoothAdapter: Bluetooth.defaultAdapter 
+    id: battery
 
     width: 30
     height: 30
 
     color: AppState.defaultBackgroundColor
 
-    HoverHandler {
-        id: hover
-    }
+    readonly property UPowerDevice device:
+        BatteryUtils.getDevice(UPower)
 
     Text {
         anchors.centerIn: parent
 
         color: AppState.defaultTextColor
-        text: BluetoothUtils.indicator(bluetoothAdapter)
+        text: BatteryUtils.indicator(battery.device)
 
         font {
             pixelSize: AppState.defaultFontSize
@@ -34,30 +31,37 @@ Rectangle {
         }
     }
 
+    HoverHandler {
+        id: hover
+    }
+
+    // Show additional battery information on hover.
     PopupWindow {
-        anchor.item: bluetooth
-        
-        visible: hover.hovered       
-        
-        implicitWidth: 140
+        anchor.item: battery
+
+        implicitWidth: 100
         implicitHeight: 60
 
+        visible: hover.hovered
+
         color: "transparent"
-        
+
         anchor.rect {
-            x: (bluetooth.width - implicitWidth) / 2
-            y: bluetooth.height + 10
+            x: (battery.width - implicitWidth) / 2
+            y: battery.height + 10
         }
 
         Rectangle {
             anchors.fill: parent
+
             color: AppState.defaultPopupBackground
             radius: AppState.defaultPopupRadius
 
             Text {
                 anchors.centerIn: parent
+
                 color: AppState.defaultTextColor
-                text: BluetoothUtils.tooltip(bluetoothAdapter)
+                text: BatteryUtils.tooltip(battery.device, UPowerDeviceState)
             }
         }
     }

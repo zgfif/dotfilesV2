@@ -4,7 +4,7 @@ import QtQuick
 
 import Quickshell.Hyprland
 
-import "../../app"
+import "../../../app"
 
 Row {
     spacing: 0

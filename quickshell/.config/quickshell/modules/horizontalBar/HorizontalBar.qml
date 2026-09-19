@@ -1,9 +1,9 @@
-// HorizontalPanel.qml
+// HorizontalBar.qml
 
 import Quickshell
 
-import "../app"
-import "../components/areas"
+import "../../app"
+import "./areas"
 
 PanelWindow {
     anchors {

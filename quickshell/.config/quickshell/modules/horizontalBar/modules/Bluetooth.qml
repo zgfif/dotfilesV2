@@ -1,42 +1,32 @@
-// Network.qml
+// Bluetooth.qml
 
 import QtQuick
 
-import Quickshell.Networking
 import Quickshell
+import Quickshell.Bluetooth
 
-import "../../app"
-import "../../utils/network.js" as NetworkUtils
+import "../../../app"
+import "../utils/bluetooth.js" as BluetoothUtils
 
 Rectangle {
-    id: network
+    id: bluetooth
+
+    readonly property var bluetoothAdapter: Bluetooth.defaultAdapter 
 
     width: 30
     height: 30
 
     color: AppState.defaultBackgroundColor
 
-    readonly property var wifiAdapter: Networking.devices.values.find(
-        value => value.name.startsWith("wlp")
-    )
-
-    // run nmtui after clicking on indicator
-    TapHandler {
-        onTapped: Quickshell.execDetached({
-            command: ["kitty", "-e", "nmtui"]
-        })
-    }
-
     HoverHandler {
         id: hover
     }
 
     Text {
-        id: textNetwork
-
         anchors.centerIn: parent
+
         color: AppState.defaultTextColor
-        text: NetworkUtils.chooseIcon(network.wifiAdapter)
+        text: BluetoothUtils.indicator(bluetoothAdapter)
 
         font {
             pixelSize: AppState.defaultFontSize
@@ -45,18 +35,18 @@ Rectangle {
     }
 
     PopupWindow {
-        anchor.item: network
+        anchor.item: bluetooth
         
-        visible: hover.hovered
-
-        implicitWidth: 100
+        visible: hover.hovered       
+        
+        implicitWidth: 140
         implicitHeight: 60
-    
+
         color: "transparent"
-    
+        
         anchor.rect {
-            x: (network.width - implicitWidth) / 2
-            y: network.height + 10
+            x: (bluetooth.width - implicitWidth) / 2
+            y: bluetooth.height + 10
         }
 
         Rectangle {
@@ -67,7 +57,7 @@ Rectangle {
             Text {
                 anchors.centerIn: parent
                 color: AppState.defaultTextColor
-                text: NetworkUtils.description(network.wifiAdapter)
+                text: BluetoothUtils.tooltip(bluetoothAdapter)
             }
         }
     }

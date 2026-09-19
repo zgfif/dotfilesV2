@@ -1,4 +1,4 @@
-// app_launcher.js
+// application_launcher.js
 
 function sortByCount(array) {
     array.sort((a, b) => b.count - a.count)

@@ -5,8 +5,8 @@ import QtQuick
 import Quickshell
 import Quickshell.Services.UPower
 
-import "../../app"
-import "../../utils/powerMode.js" as PowerModeUtils
+import "../../../app"
+import "../utils/powerMode.js" as PowerModeUtils
 
 Rectangle {
     id: powerMode

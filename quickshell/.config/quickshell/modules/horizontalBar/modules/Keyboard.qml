@@ -5,8 +5,8 @@ import QtQuick
 import Quickshell
 import Quickshell.Io
 
-import "../../app"
-import "../../utils/keyboard.js" as KeyboardUtils
+import "../../../app"
+import "../utils/keyboard.js" as KeyboardUtils
 
 Rectangle {
     id: keyboard

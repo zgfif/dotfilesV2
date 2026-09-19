@@ -1,29 +1,33 @@
-// Battery.qml
+// DateTime.qml
 
 import QtQuick
 
 import Quickshell
-import Quickshell.Services.UPower
 
-import "../../app"
-import "../../utils/battery.js" as BatteryUtils
+import "../../../app"
 
 Rectangle {
-    id: battery
+    id: dateTime
 
-    width: 30
+    width: 45
     height: 30
 
     color: AppState.defaultBackgroundColor
+    
+    SystemClock {
+        id: clock
+        precision: SystemClock.Seconds
+    }
 
-    readonly property UPowerDevice device:
-        BatteryUtils.getDevice(UPower)
+    HoverHandler {
+        id: hover
+    }
 
     Text {
         anchors.centerIn: parent
 
         color: AppState.defaultTextColor
-        text: BatteryUtils.indicator(battery.device)
+        text: Qt.formatDateTime(clock.date, AppState.timeFormat)
 
         font {
             pixelSize: AppState.defaultFontSize
@@ -31,37 +35,32 @@ Rectangle {
         }
     }
 
-    HoverHandler {
-        id: hover
-    }
-
-    // Show additional battery information on hover.
     PopupWindow {
-        anchor.item: battery
-
-        implicitWidth: 100
-        implicitHeight: 60
+        anchor.item: dateTime
 
         visible: hover.hovered
-
-        color: "transparent"
-
+        
+        implicitWidth: 100
+        implicitHeight: 60
+        
         anchor.rect {
-            x: (battery.width - implicitWidth) / 2
-            y: battery.height + 10
+            x: (dateTime.width - implicitWidth) / 2
+            y: dateTime.height + 10
         }
-
+        
+        color: "transparent"
+        
         Rectangle {
             anchors.fill: parent
-
+            
             color: AppState.defaultPopupBackground
             radius: AppState.defaultPopupRadius
 
-            Text {
+             Text {
                 anchors.centerIn: parent
 
                 color: AppState.defaultTextColor
-                text: BatteryUtils.tooltip(battery.device, UPowerDeviceState)
+                text: Qt.formatDateTime(clock.date, AppState.dateFormat)
             }
         }
     }
