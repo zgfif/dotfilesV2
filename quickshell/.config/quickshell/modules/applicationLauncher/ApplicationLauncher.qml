@@ -264,13 +264,15 @@ PanelWindow {
     Process {
         id: lauchedAppsFileProcess
 
-        readonly property string filePath: "/home/pasha/.config/quickshell/modules/applicationLauncher/data/launched_apps.json"
+        readonly property url filePath: Qt.resolvedUrl("./data/launched_apps.json")
         
-        command: ["touch", filePath]
+        readonly property string localFilePath: filePath.toString().replace("file://", "")
+        
+        command: ["touch", localFilePath]
         
         stdout: StdioCollector {
             onStreamFinished: {
-                console.log(`validate ${lauchedAppsFileProcess.filePath}`)
+                console.log(`validate ${lauchedAppsFileProcess.localFilePath}`)
             }
         }
     }
