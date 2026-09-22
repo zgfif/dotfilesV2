@@ -11,9 +11,8 @@ import "../../app"
 // Displays an application in the launcher.   
 Rectangle {
     required property string name
-    required property string icon
     required property string exec
-    required property string terminal
+    required property string icon
 
     readonly property bool isCurrent: ListView.isCurrentItem
 

@@ -34,9 +34,9 @@ PanelWindow {
         if (!currentItem) {
             return
         }
-
+        
         Quickshell.execDetached({
-            command: (currentItem.terminal === "true") ? ["kitty", "-e", currentItem.exec] : [currentItem.exec]
+            command: currentItem.exec.split(" ")
         })
 
         searchInput.text = ""
@@ -154,7 +154,9 @@ PanelWindow {
     }
 
     // модель для хранения данных приложений.
-    ListModel { id: appsModel }
+    ListModel { 
+        id: appsModel    
+    }
 
     SortFilterProxyModel {
         id: proxyModel

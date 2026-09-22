@@ -2,19 +2,19 @@
     "apps": [
         {
             "name": "Telegram",
-            "count": 13
+            "count": 26
         },
         {
             "name": "Neovim",
-            "count": 8
+            "count": 21
         },
         {
             "name": "Firefox",
-            "count": 7
+            "count": 9
         },
         {
             "name": "Htop",
-            "count": 3
+            "count": 6
         },
         {
             "name": "Obsidian",
@@ -22,6 +22,18 @@
         },
         {
             "name": "GVim",
+            "count": 1
+        },
+        {
+            "name": "Display",
+            "count": 1
+        },
+        {
+            "name": "gThumb",
+            "count": 1
+        },
+        {
+            "name": "kitty",
             "count": 1
         },
         {

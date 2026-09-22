@@ -29,12 +29,17 @@ function convertDesktopsStringToArray(desktopsString) {
         if (values.length < 3)
             continue
 
+        let exec = values[1].split(" ")[0]
+        
+        if (values[3] === "true") {
+            exec = `kitty -e ${exec}`
+        }
+
         arr.push(
             { 
                 name: values[0], 
-                exec: values[1].split(" ")[0],
+                exec: exec,
                 icon: values[2],
-                terminal: values[3].trim() === "" ? "false" : values[3]
             }
         )
     }
