@@ -1,1 +1,20 @@
-{"apps":[{"name":"Firefox","count":1},{"name":"Obsidian","count":1},{"name":"Telegram","count":2}]}
+{
+    "apps": [
+        {
+            "name": "Telegram",
+            "count": 6
+        },
+        {
+            "name": "Neovim",
+            "count": 5
+        },
+        {
+            "name": "Firefox",
+            "count": 5
+        },
+        {
+            "name": "Obsidian",
+            "count": 2
+        }
+    ]
+}

@@ -14,7 +14,7 @@ function sortByName(array) {
 
 
 
-function getDesktopsArray(desktopsString) {
+function convertDesktopsStringToArray(desktopsString) {
     const arr = []
     const output = desktopsString.trim()
 
@@ -42,7 +42,7 @@ function getDesktopsArray(desktopsString) {
 
 
 
-function getdesktopsArrayWithCount(desktopsArray, sortedLaunchedApps) {
+function getDesktopsArrayWithCount(desktopsArray, sortedLaunchedApps) {
     const desktopsArrayWithCount = []
 
     for (const desktop of desktopsArray) {
@@ -78,14 +78,13 @@ function splitByLaunching(desktops) {
 
 
 
-function buildDesktopsArray(
-    desktopsString, 
+function buildAppsArrayAccordingToLaunchCount(
+    desktopsArray, 
     launchedAppsArray
 ) {
-    const desktopsArray = getDesktopsArray(desktopsString)
     const sortedLauncheAppsArray = sortByCount(launchedAppsArray.apps)
 
-    const desktopsArrayWithCount = getdesktopsArrayWithCount(
+    const desktopsArrayWithCount = getDesktopsArrayWithCount(
         desktopsArray, 
         sortedLauncheAppsArray
     )
@@ -100,7 +99,7 @@ function buildDesktopsArray(
 
 
 
-function updateAppsData(fileData, appName) {
+function updateLaunchedAppsArray(fileData, appName) {
     const index = fileData.apps.findIndex(item => item.name === appName)
 
     if (index < 0) {
@@ -112,6 +111,70 @@ function updateAppsData(fileData, appName) {
     } else {
         fileData.apps[index].count += 1
     }
+ 
+    sortByCount(fileData.apps)
 
     return fileData
+}
+
+
+
+function jsonToObject(jsonText) {
+    const defaultObject = { apps: [] }
+
+    if (jsonText.length === 0) {
+        return defaultObject
+    }
+
+    try {
+        return JSON.parse(jsonText)
+    } catch (error) {
+        console.log("Failed to parse launched apps:", error)
+        return defaultObject
+    }
+}
+
+
+function convertToLocal(filePath) {
+    return filePath.replace("file://", "")
+}
+
+
+
+function updateLaunchedAppsFile(file, appName) {
+    let fileData = jsonToObject(
+        file.text()
+    )
+
+    fileData = updateLaunchedAppsArray(fileData, appName)
+
+    try {
+        const string = JSON.stringify(fileData, null, 4)
+
+        try {
+            file.setData(string)
+        } catch (error) {
+            console.log("Can not write to JSON file:", error)
+            return
+        }
+
+    } catch (error) {
+        console.log("Can not convert JSON to string:", error)
+        return
+    }
+}
+
+
+
+function buildAppsArray(desktopsString, jsonFile) {
+    const desktopsArray = convertDesktopsStringToArray(desktopsString)
+
+    const launchedAppsArray = jsonToObject(
+        jsonFile.text()
+    )
+
+    return buildAppsArrayAccordingToLaunchCount(
+        desktopsArray, 
+        launchedAppsArray
+    )
 }

@@ -32,6 +32,8 @@ QtObject {
 
     // Application launcher
     property int launcherFontSize: 16
+    property string launcherFontColor: "white"
+
     property int launcherWidth: 300
     property int launcherHeight: 300
     
@@ -47,5 +49,6 @@ QtObject {
     property int launcherItemWidth: 280
     property int launcherItemHeight: 50
 
-    property string selectedApp: "#242424"
+    property string launcherSelectedBgColor: "#242424"
+    property string launcherBgColor: "black"
 }

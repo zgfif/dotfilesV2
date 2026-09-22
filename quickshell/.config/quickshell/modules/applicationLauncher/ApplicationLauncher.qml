@@ -7,7 +7,6 @@ import Quickshell
 import Quickshell.Io
 import Quickshell.Hyprland
 import Quickshell.Wayland
-import Quickshell.Widgets
 
 import "../../app"
 import "./application_launcher.js" as LauncherUtils
@@ -28,7 +27,52 @@ PanelWindow {
     visible: false
     focusable: true
 
-    // visible Application Launcher window.
+
+    function launchCurrentApp() {
+        const currentItem = appListView.currentItem
+        
+        if (!currentItem) {
+            return
+        }
+        
+        Quickshell.execDetached({
+            command: [currentItem.exec.split(" ")[0]]
+        })
+
+        searchInput.text = ""
+        appLauncher.visible = false
+        appListView.currentIndex = 0
+
+        LauncherUtils.updateLaunchedAppsFile(
+            jsonFile, 
+            currentItem.name
+        )
+
+        desktopsProcess.running = true
+    }
+
+
+    function moveSelectionUp() {
+        if (appListView.currentIndex > 0) {
+            appListView.currentIndex-- 
+        }
+    }
+
+
+    function moveSelectionDown() {
+        if (appListView.currentIndex < appListView.count - 1) {
+            appListView.currentIndex++
+        }
+    }
+
+
+    Component.onCompleted: {
+        appsModel.clear()
+        launchedAppsFileProcess.running = true
+    }
+
+
+    // Application Launcher UI.
     Rectangle {
         anchors.centerIn: parent
 
@@ -39,7 +83,7 @@ PanelWindow {
 
         border.color: AppState.launcherBorderColor
 
-        color: "black"
+        color: AppState.launcherBgColor
 
         TextField {
             id: searchInput
@@ -58,60 +102,29 @@ PanelWindow {
             font.pixelSize: AppState.launcherFontSize
 
             // the color of entered text.
-            color: "white"
+            color: AppState.launcherFontColor
 
             // TextField's background property can't accept color 
             // as value so I use Rectanlge with color.
-            background: Rectangle { color: "black" }
+            background: Rectangle { color: AppState.launcherBgColor }
             
             Keys.onPressed: (event) => {
                 if (event.key === Qt.Key_Return) {
-                    var currentItem = appListView.currentItem
-                    
-                    if (currentItem) {
-                        Quickshell.execDetached({
-                            command: [currentItem.exec]
-                        })
-                        searchInput.text = ""
-                        appLauncher.visible = false
-                        appListView.currentIndex = 0
-
-                        const appsFileText = jsonFile.text()
-
-                        const appsData = appsFileText.length > 0 ? JSON.parse(appsFileText) : { apps: [] }
-                        
-                        const newData = LauncherUtils.updateAppsData(
-                            appsData, 
-                            currentItem.name
-                        )
-
-                        jsonFile.setData(JSON.stringify(newData))
-
-                        desktopsProcess.running = true
-                    }
+                    launchCurrentApp()
                 } else if (event.key === Qt.Key_Up) {
-                    if (appListView.currentIndex > 0) {
-                        appListView.currentIndex-- 
-                    }
-
+                    moveSelectionUp()
                 } else if (event.key === Qt.Key_Down) {
-                    if (appListView.count > 0 && 
-                        appListView.currentIndex < appListView.count - 1) {
-                        appListView.currentIndex++
-                    }
-
+                    moveSelectionDown()
                 }            
             }
         }
 
+
         // apps list area
         Rectangle {
-            id: itemsArea
-
             width: AppState.launcherItemsWidth
             height: AppState.launcherItemsHeight
-
-            color: "black"
+            color: AppState.launcherBgColor
 
             anchors { 
                 top: parent.top
@@ -124,15 +137,11 @@ PanelWindow {
                 id: appListView
 
                 anchors.fill: parent
-
                 model: proxyModel
-
                 currentIndex: 0
-
                 spacing: 10
                 clip: true
-
-                delegate: appDelegate
+                delegate: ApplicationDelegate {}
             }
         }
     }
@@ -146,69 +155,16 @@ PanelWindow {
         }
     }
 
-    Component.onCompleted: {
-        // performs after start up the whole quickshell.
-        appsModel.clear()
-        desktopsProcess.running = true
-        lauchedAppsFileProcess.running = true
-    }
+
 
     // модель для хранения данных приложений.
     ListModel { id: appsModel }
 
-    // component used to show one app in app launcher.
-    Component {
-        id: appDelegate
-        
-        Rectangle {
-            required property string name
-            required property string icon
-            required property string exec
-
-            property bool isCurrent: ListView.isCurrentItem
-
-            width: AppState.launcherItemWidth
-            height: AppState.launcherItemHeight
-
-            color: isCurrent ? "grey" : "black"
-
-            IconImage {
-                anchors {
-                    left: parent.left
-                    leftMargin: 10
-                    verticalCenter: parent.verticalCenter
-                }
-
-                width: 30
-                height: 30
-                
-                source: Quickshell.iconPath(icon)
-            }
-
-            Text {
-                anchors.fill: parent
-
-                leftPadding: 60
-                verticalAlignment: Text.AlignVCenter
-
-                font { 
-                    pixelSize: 16
-                    family: AppState.defaultFontFamily
-                }
-
-                color: "white"
-                text: name
-            }
-        }
-    }
-
     SortFilterProxyModel {
         id: proxyModel
-        
-        // readonly property var appsCounts: JSON.parse(jsonFile.text())
 
         model: appsModel
-        
+
         filters: [
              FunctionFilter {
                 readonly property string searchText: searchInput.text.toLowerCase()
@@ -230,8 +186,8 @@ PanelWindow {
     FileView {
         id: jsonFile
 
-        path: lauchedAppsFileProcess.filePath
-
+        path: launchedAppsFileProcess.filePath
+        preload: false
         blockLoading: true
     }
  
@@ -239,40 +195,39 @@ PanelWindow {
     Process {
         id: desktopsProcess
 
-        command: [
-            "sh", 
-            "-c", 
-            "~/.config/quickshell/modules/applicationLauncher/scripts/desktops.sh"
-        ]
+        command: [Qt.resolvedUrl("./scripts/desktops.sh")]
 
          stdout: StdioCollector {
             onStreamFinished: {
                 appsModel.clear()
-                
-                const launchedArray = jsonFile.text().length > 0 ? JSON.parse(jsonFile.text()) : { apps: [] }
 
-                const modifiedArray = LauncherUtils.buildDesktopsArray(this.text, launchedArray)
+                const appsArray = LauncherUtils.buildAppsArray(
+                    this.text,
+                    jsonFile
+                )
 
-                for (const desktop of modifiedArray) {
-                    appsModel.append(desktop)
+                for (const app of appsArray) {
+                    appsModel.append(app)
                 }
+
             }
         }
     }
 
     // create/validate existing file to store recently launched apps.
     Process {
-        id: lauchedAppsFileProcess
-
-        readonly property url filePath: Qt.resolvedUrl("./data/launched_apps.json")
+        id: launchedAppsFileProcess
         
-        readonly property string localFilePath: filePath.toString().replace("file://", "")
+        readonly property string filePath: LauncherUtils.convertToLocal(
+            Qt.resolvedUrl("./data/launched_apps.json").toString()
+        )
         
-        command: ["touch", localFilePath]
+        command: ["touch", filePath]
         
         stdout: StdioCollector {
             onStreamFinished: {
-                console.log(`validate ${lauchedAppsFileProcess.localFilePath}`)
+                desktopsProcess.running = true
+                console.log(`validate ${launchedAppsFileProcess.filePath}`)
             }
         }
     }
