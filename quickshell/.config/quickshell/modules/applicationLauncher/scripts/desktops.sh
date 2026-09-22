@@ -20,12 +20,14 @@ collect_apps_details () {
     local name
     local exec
     local icon
+    local terminal
     
     name=$(get_value $desktop Name)
     exec=$(get_value $desktop Exec)
     icon=$(get_value $desktop Icon)
+    terminal=$(get_value $desktop Terminal)
 
-    printf "%s ___ %s ___ %s\n" "$name" "$exec" "$icon"
+    printf "%s ___ %s ___ %s ___ %s\n" "$name" "$exec" "$icon" "$terminal"
   done
 }
 

@@ -34,9 +34,9 @@ PanelWindow {
         if (!currentItem) {
             return
         }
-        
+
         Quickshell.execDetached({
-            command: [currentItem.exec.split(" ")[0]]
+            command: (currentItem.terminal === "true") ? ["kitty", "-e", currentItem.exec] : [currentItem.exec]
         })
 
         searchInput.text = ""
@@ -70,7 +70,6 @@ PanelWindow {
         appsModel.clear()
         launchedAppsFileProcess.running = true
     }
-
 
     // Application Launcher UI.
     Rectangle {
@@ -119,7 +118,6 @@ PanelWindow {
             }
         }
 
-
         // apps list area
         Rectangle {
             width: AppState.launcherItemsWidth
@@ -154,8 +152,6 @@ PanelWindow {
             appLauncher.visible = !appLauncher.visible // toggle visibility of the App launcher.
         }
     }
-
-
 
     // модель для хранения данных приложений.
     ListModel { id: appsModel }
@@ -197,7 +193,7 @@ PanelWindow {
 
         command: [Qt.resolvedUrl("./scripts/desktops.sh")]
 
-         stdout: StdioCollector {
+        stdout: StdioCollector {
             onStreamFinished: {
                 appsModel.clear()
 

@@ -28,12 +28,13 @@ function convertDesktopsStringToArray(desktopsString) {
 
         if (values.length < 3)
             continue
-        
+
         arr.push(
             { 
                 name: values[0], 
-                exec: values[1].split(" ")[0], 
-                icon: values[2]
+                exec: values[1].split(" ")[0],
+                icon: values[2],
+                terminal: values[3].trim() === "" ? "false" : values[3]
             }
         )
     }
@@ -91,6 +92,7 @@ function buildAppsArrayAccordingToLaunchCount(
 
     const splited = splitByLaunching(desktopsArrayWithCount)
 
+    // firstly we show previusly launched apps count > 1, then others - sorted by alphabet.
     return [
         ...sortByCount(splited[0]), 
         ...sortByName(splited[1])
@@ -133,6 +135,7 @@ function jsonToObject(jsonText) {
         return defaultObject
     }
 }
+
 
 
 function convertToLocal(filePath) {

@@ -13,6 +13,7 @@ Rectangle {
     required property string name
     required property string icon
     required property string exec
+    required property string terminal
 
     readonly property bool isCurrent: ListView.isCurrentItem
 
