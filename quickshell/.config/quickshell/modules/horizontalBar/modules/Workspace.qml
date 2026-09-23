@@ -9,12 +9,25 @@ import "../../../app"
 Row {
     spacing: 0
 
+    function workspaceBottomLineColor(modelData, mouseArea) {
+        if (modelData.urgent)
+            return AppState.urgentWorkspaceColor
+
+        if (modelData.active || mouseArea.containsMouse)
+            return AppState.defaultTextColor
+
+        return AppState.defaultBackgroundColor        
+    }
+
     Repeater {
         // Exclude special workspaces (for example, -98).
-        model: Hyprland.workspaces.values.filter(workspace => workspace.id > 0)
+        model: Hyprland.workspaces.values.filter(
+            workspace => workspace.id > 0
+        )
           
         Rectangle {            
             // modelData - is current model item.
+
             width: 24
             height: 30
 
@@ -27,15 +40,12 @@ Row {
                 width: parent.width
                 height: 2
 
-                color: modelData.active || mouseArea.containsMouse 
-                    ? AppState.defaultTextColor 
-                    : AppState.defaultBackgroundColor
-
+                color: workspaceBottomLineColor(modelData, mouseArea)
             }
       
             MouseArea {
                 id: mouseArea
-                
+
                 anchors.fill: parent
                 hoverEnabled: true
                 
@@ -44,8 +54,11 @@ Row {
 
             Text {
                 anchors.centerIn: parent
-                
-                color: AppState.defaultTextColor
+
+                color: (modelData.urgent) 
+                    ? AppState.urgentWorkspaceColor
+                    : AppState.defaultTextColor
+
                 text: modelData.id
 
                 font {

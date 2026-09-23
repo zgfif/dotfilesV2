@@ -10,6 +10,9 @@ QtObject {
     // Common parameters:
     property string defaultTextColor: "white"
     property string defaultBackgroundColor: "transparent"
+
+    // Workspaces
+    property string urgentWorkspaceColor: "red"
     
     // PopupWindow parameters:
     property string defaultPopupBackground: "black"
