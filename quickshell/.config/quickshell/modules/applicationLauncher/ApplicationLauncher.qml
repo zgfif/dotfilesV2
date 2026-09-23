@@ -215,13 +215,17 @@ PanelWindow {
     // create/validate existing file to store recently launched apps.
     Process {
         id: launchedAppsFileProcess
+
+        readonly property string directory: Quickshell.env("HOME") + "/.local/share/quickshell/"
+        readonly property string filename: "launched_apps.json"
+        readonly property string filePath: directory + filename
         
-        readonly property string filePath: LauncherUtils.convertToLocal(
-            Qt.resolvedUrl("./data/launched_apps.json").toString()
-        )
-        
-        command: ["touch", filePath]
-        
+        command: [
+            "sh", 
+            "-c", 
+            `mkdir -p ${directory} && touch ${filePath}`
+        ]
+
         stdout: StdioCollector {
             onStreamFinished: {
                 desktopsProcess.running = true

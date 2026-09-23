@@ -26,8 +26,12 @@
 
 	diretory panels -> modules
 
-### Task 3 (pending):
+### Task 3 (DONE):
 
 Cделать так, чтобы консольные приложения (Neovim, Htop и др.) запускались через Application Launcher (Super + A).
 
 Нужно распознать что  это консольное приложение.
+
+### Task 4 (pending):
+
+вынести файл `launched_apps.json`  в `~/.local/share/quickshell/launched_apps.json`
