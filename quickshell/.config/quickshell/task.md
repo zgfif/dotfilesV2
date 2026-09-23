@@ -32,6 +32,10 @@ Cделать так, чтобы консольные приложения (Neov
 
 Нужно распознать что  это консольное приложение.
 
-### Task 4 (pending):
+### Task 4 (DONE):
 
 вынести файл `launched_apps.json`  в `~/.local/share/quickshell/launched_apps.json`
+
+### Task 5 (DONE):
+
+добавить возможность убрать application launcher путём нажатия `Esc`

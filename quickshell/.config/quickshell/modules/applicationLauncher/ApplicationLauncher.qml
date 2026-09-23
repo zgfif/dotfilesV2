@@ -65,6 +65,10 @@ PanelWindow {
         }
     }
 
+    function hideLauncher() {
+        appLauncher.visible = false
+    }
+
 
     Component.onCompleted: {
         appsModel.clear()
@@ -114,7 +118,9 @@ PanelWindow {
                     moveSelectionUp()
                 } else if (event.key === Qt.Key_Down) {
                     moveSelectionDown()
-                }            
+                } else if (event.key === Qt.Key_Escape) {
+                    hideLauncher()
+                }
             }
         }
 
