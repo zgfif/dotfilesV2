@@ -43,3 +43,29 @@ Cделать так, чтобы консольные приложения (Neov
 ### Task 6 (DONE):
 
 если `workspace` становится `urgent` подсвечивать цифру красным.
+
+### Task 7 (DONE):
+
+не использовать desktop файлы у которых `NoDisplay=true`, а также скрытые приложения `Hidden=true`, а приложения под конкретный дистрибутив `OnlyShowIn=XFCE;GNOME;Unity;Pantheon;X-Cinnamon;`и скрытые от конкретного дистрибутива `NotShowIn=KDE;GNOME;` не показываются приложения независимо от параметра.
+
+### Task 8 (pending):
+
+При нахождении на последнем элементе нажимаем  `Down` переходим на самый верх.
+
+При нахождении на первом элементе нажимаем  `Up` переходим на самый низ.
+
+### Task 9 (pending):
+
+Решить баг
+
+```Shell
+ WARN: Could not load icon "hwloc" at size QSize(30, 30) from request
+  WARN: Could not load icon "preferences-system-network" at size QSize(30, 30) from request
+  WARN: Could not load icon "network-wired" at size QSize(30, 30) from request
+  WARN: Could not load icon "hwloc" at size QSize(30, 30) from request
+  WARN: Could not load icon "preferences-system-network" at size QSize(30, 30) from request
+  WARN: Could not load icon "network-wired" at size QSize(30, 30) from request
+  WARN: Could not load icon "network-wired" at size QSize(30, 30) from request
+```
+
+### Task 10 (pending):
