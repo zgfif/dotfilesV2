@@ -53,17 +53,22 @@ PanelWindow {
 
 
     function moveSelectionUp() {
-        if (appListView.currentIndex > 0) {
-            appListView.currentIndex-- 
+        appListView.currentIndex-- 
+
+        if (appListView.currentIndex < 0) {
+            appListView.currentIndex = appListView.count - 1
         }
     }
 
 
     function moveSelectionDown() {
-        if (appListView.currentIndex < appListView.count - 1) {
-            appListView.currentIndex++
+        appListView.currentIndex++
+
+        if (appListView.currentIndex > appListView.count -1) {
+            appListView.currentIndex = 0
         }
     }
+
 
     function hideLauncher() {
         appLauncher.visible = false
