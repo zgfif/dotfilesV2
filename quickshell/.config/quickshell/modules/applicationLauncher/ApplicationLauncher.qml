@@ -175,13 +175,11 @@ PanelWindow {
         model: appsModel
 
         filters: [
-             FunctionFilter {
+            FunctionFilter {
                 readonly property string searchText: searchInput.text.toLowerCase()
 
-                component RoleData: QtObject { property string name }
-                
-                function filter(data: RoleData) : bool {
-                    return (data.name.toLowerCase().includes(searchText))
+                function filter(name: string) : bool {
+                    return (name.toLowerCase().includes(searchText))
                 }
 
                 onSearchTextChanged: {

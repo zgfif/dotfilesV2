@@ -1,60 +1,55 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
 
-get_value () {
-  local filepath="$1"
-  local attribute="$2"
+# activates showing only empty string if not found any desktop files:
+shopt -s nullglob
 
-  awk -F "=" -v attribute="$attribute" '
-    /^\[Desktop Entry\]/ { flag=1; next }
-    /^\[/ { flag=0 } 
-    flag && $0 ~ "^" attribute "=" {print $2}
-  ' "$filepath"
+dm=${XDG_CURRENT_DESKTOP:-}
+
+declare -A parameters
+
+
+
+in_list() { # in_list "A;B;C" "x:y"
+    local -r IFS=";:"
+    local x y
+
+    for x in $1; do
+        for y in $2; do
+            [[ "$x" == "$y" ]] && return 0
+        done
+    done
+    return 1
 }
 
 
-collect_apps_details () {
-  local -r directory="/usr/share/applications"
 
+for desktop in /usr/share/applications/*.desktop; do
+    parameters=()
 
-  for desktop in "$directory"/*.desktop; do
-    local name
-    local exec
-    local icon
-    local terminal
-    local no_display
-    local hidden
-    local only_show_in
-    local not_show_in
+    while IFS='=' read -r key value; do
+        [[ -z "$key" ]] && continue
+        parameters["$key"]="$value"
+    done < <(awk '
+        /^\[Desktop Entry\]/ { flag=1; next } 
+        /^\[/ { flag=0 } 
+        flag && /=/ { print }
+    ' "$desktop")
 
-    no_display=$(get_value $desktop NoDisplay)
-    hidden=$(get_value $desktop Hidden)
-    only_show_in=$(get_value $desktop OnlyShowIn)
-    not_show_in=$(get_value $desktop NotShowIn)
+    [[ "${parameters[NoDisplay]}" == "true" ]] && continue
+    [[ "${parameters[Hidden]}" == "true" ]] && continue
 
-    if [[ $no_display == "true" ]]; then
-      continue
+    if [[ -n "$dm" ]]; then
+        if [[ -n "${parameters[OnlyShowIn]}" ]] && !in_list "${parameters[OnlyShowIn]}" "$dm"; then
+            continue
+        fi
+
+        if [[ -n "${parameters[NotShowIn]}" ]] && in_list "${parameters[NotShowIn]}" "$dm"; then
+            continue
+        fi
     fi
 
-    if [[ $hidden == "true" ]]; then
-      continue
-    fi
+    printf "%s ___ %s ___ %s ___ %s\n" \
+        "${parameters[Name]}" "${parameters[Exec]}" \
+        "${parameters[Icon]}" "${parameters[Terminal]}"
+done
 
-    if [[ -n $only_show_in ]]; then
-      continue
-    fi
-
-    if [[ -n $not_show_in ]]; then
-      continue
-    fi
-
-    name=$(get_value $desktop Name)
-    exec=$(get_value $desktop Exec)
-    icon=$(get_value $desktop Icon)
-    terminal=$(get_value $desktop Terminal)
-
-    printf "%s ___ %s ___ %s ___ %s\n" "$name" "$exec" "$icon" "$terminal"
-  done
-}
-
-
-collect_apps_details

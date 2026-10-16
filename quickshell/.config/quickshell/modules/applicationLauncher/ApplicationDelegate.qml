@@ -24,15 +24,15 @@ Rectangle {
         : AppState.launcherBgColor
 
     IconImage {
+        id: iconImage
+
         anchors {
             left: parent.left
             leftMargin: 10
             verticalCenter: parent.verticalCenter
         }
 
-        width: 30
-        height: 30
-        
+        implicitSize: 32
         source: Quickshell.iconPath(icon)
     }
 
