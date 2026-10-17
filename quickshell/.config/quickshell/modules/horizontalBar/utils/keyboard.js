@@ -10,6 +10,9 @@ function convertToShortLayout(longLayout) {
     if (longLayout.includes("Russian"))
         return "ru"
 
+    if (longLayout.includes("Ukrainian"))
+        return "ua"
+
     return "?"
 }
 
